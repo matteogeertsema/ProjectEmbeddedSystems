@@ -1,12 +1,22 @@
 import serial                    # import pySerial module
-ComPort = serial.Serial('COM25') # open the COM Port
+# Setup voor Serial Connectie
+poort = input("ComPort: ")
+print("U heeft poort "+poort+" geselecteerd")
+ComPort = serial.Serial('COM3')   # open the COM Port
+ComPort.baudrate = 9600          # set Baud rate to 9600
+ComPort.bytesize = 8             # Number of data bits = 8
+ComPort.parity   = 'N'           # No parity
+ComPort.stopbits = 1             # Number of Stop bits = 1
 
-ComPort.setRTS(0)                # Make RTS pin low
-#put some delay, or ask for input
-ComPort.setRTS(1)                # Make RTS pin high
+# Schrijft data naar de poort
+data = bytearray(b'A')
+print("Schijft "+data+" naar port 3")
+No = ComPort.write(data)
 
-ComPort.setDTR(0)                # Make DTR pin low
-#put some delay, or ask for input
-ComPort.setDTR(1)                # Make DTR pin high
+# Leest de data van de poort
+data = ComPort.readline()        # Wait and read data
+print(data)
 
+# Sluit de seriele connectie af
+print("De verbinding met"+poort+"wordt afgesloten")
 ComPort.close()                  # Close the COM Port
