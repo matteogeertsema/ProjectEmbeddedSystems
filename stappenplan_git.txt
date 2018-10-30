@@ -9,6 +9,7 @@ Hoofstukken: 	-BASIS
 		-BRANCH
 		-ADD EN COMMIT
 		-PUSH, PULL EN MERGE
+		-STAPPENPLAN
 		
 
 
@@ -53,6 +54,7 @@ Je zit dan op de groene branch.
 Om een branch te deleten gebruik:
 $git branch -d branchnaam  		// eerst altijd de local branch deleten
 $git push origin --delete branchnaam	// Daarna de remote branch deleten(alleen als er gepushd is in deze branch)
+
 
 
 ADD EN COMMIT
@@ -102,10 +104,27 @@ Gebruik push om je veranderingen in de remote repository te zetten:
 
 $ git push -u origin branchnaam
 
-Om twee branchen te mergen gebruik een checkout om eerst naar de branch te gaan naar welke je de bestanden wil hebben.
+Om twee branches te mergen gebruik een checkout om eerst naar de branch te gaan naar welke je de bestanden wil hebben.
 Bijvoorbeeld: je wilt de bestanden van branch matteo naar de branch master mergen en pushen
 Doe dan:
 $ git checkout master 		//om naar de juiste branch te gaan
 $ git pull origin master	//om de nieuwste updates van de master branch op te halen
 $ git merge matteo
+$ git push origin master
+
+
+
+STAPPENPLAN
+Voor een normale push naar een branch
+$ cd ...			//ga naar repository
+$ git checkout branchnaam	//ga naar de gewenste branch
+$ git status			//om te kijken of er veranderingen zijn
+$ git add -A			//om alle veranderingen toe te voegen
+$ git commit -m "comment"
+$ git push -u origin branchnaam	//om veranderingen te pushen naar remote repository
+
+Vervolg als je twee branches wil mergen(in dit voorbeeld naar master mergen)
+$ git checkout master 		//om naar de juiste branch te gaan
+$ git pull origin master	//om de nieuwste updates van de master branch op te halen
+$ git merge branchnaam
 $ git push origin master
