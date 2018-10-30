@@ -1,0 +1,111 @@
+Stappenplan voor Git.
+
+BELANGRIJK
+Alle commands in dit stappenplan gebruiken in git bash.
+Voor een command staat $.
+Voor een comment naast een command staat //
+
+Hoofstukken: 	-BASIS
+		-BRANCH
+		-ADD EN COMMIT
+		-PUSH, PULL EN MERGE
+		
+
+
+BASIS
+
+Om in de remote repository tekomen gebruik 
+$ cd C:/../../
+$ cd D:/../../
+
+Voorbeeld:
+Remote repository staat in: D:/projects/project_embedded
+Als je in de remote repository wil komen gebruik je bijvoorbeeld:
+
+$ cd d:/projects/project_embedded
+
+Als het niet lukt om in één keer naar de juiste map te gaan moet je één voor één door je mappen heen gaan:
+
+$ cd d:/
+$ cd projects
+$ cd project_embedded
+
+Gebruik ls om te kijken welke bestanden erin je map staan:
+$ ls
+
+
+
+BRANCH
+
+Maak een branch, zodat er vaak gepushd kan worden en zodat niet alles op de master branch wordt gepushd.
+
+Voor het maken van een nieuwe branch:
+$ git branch branchnaam
+
+Wanneer je op een andere branch wil maken gebruik checkout:
+
+$ git cheackout branchnaam
+
+check op welke branch je zit met:
+$ git branch
+Je zit dan op de groene branch.
+
+Om een branch te deleten gebruik:
+$git branch -d branchnaam  		// eerst altijd de local branch deleten
+$git push origin --delete branchnaam	// Daarna de remote branch deleten(alleen als er gepushd is in deze branch)
+
+
+ADD EN COMMIT
+
+Gebruik git status voor de status van je bestanden: 	-voordat je iets add
+							-na dat je iets add
+							-voordat je iets commit
+							-na dat je iets commit
+$ git status
+
+Gebruik add om een bestand of map toe tevoegen aan de staging area
+$ git add -A 		//voor het toevoegen van alle bestanden en mappen
+$ git add naamfile 	//voor het toevoegen van 1 specifiek bestand of map
+
+
+Gebruik commit om iets te committen naar je local repository
+$ git commit -m "comment"
+
+Als je alles wil verwijderen van de staging area gebruik reset:
+$ git reset
+
+Gebruik log om de gegevens van je laatste commit te bekijken:
+$ git log
+
+Als je wil zien wat er veranderd is in de bestanden gebruik diff(voordat je iets add):
+$ git diff
+
+
+
+PUSH, PULL EN MERGE
+
+Gebruik pull om bestanden op te halen uit de repository:
+
+$ git pull origin branchnaam
+
+Bijvoorbeeld:
+$ git pull origin master
+$ git pull origin matteo
+
+origin = naam van remote repository
+master = naam van een branch
+
+BELANGRIJK
+Gebruik eerst een pull voordat je gaat pushen in de master branch of een andere branch waar iemand anders zit te werken.
+
+Gebruik push om je veranderingen in de remote repository te zetten:
+
+$ git push -u origin branchnaam
+
+Om twee branchen te mergen gebruik een checkout om eerst naar de branch te gaan naar welke je de bestanden wil hebben.
+Bijvoorbeeld: je wilt de bestanden van branch matteo naar de branch master mergen en pushen
+Doe dan:
+$ git checkout master 		//om naar de juiste branch te gaan
+$ git pull origin master	//om de nieuwste updates van de master branch op te halen
+$ git merge matteo
+$ git push origin master
