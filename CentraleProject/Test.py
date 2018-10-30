@@ -2,7 +2,7 @@ import serial                    # import pySerial module
 # Setup voor Serial Connectie
 poort = input("ComPort: ")
 print("U heeft poort "+poort+" geselecteerd")
-ComPort = serial.Serial('COM3')   # open the COM Port
+ComPort = serial.Serial('COM3')  # open the COM Port
 ComPort.baudrate = 9600          # set Baud rate to 9600
 ComPort.bytesize = 8             # Number of data bits = 8
 ComPort.parity   = 'N'           # No parity
