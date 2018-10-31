@@ -2,9 +2,6 @@ import serial                                               # import pySerial mo
 import time                                                 # import time module
 import tkinter as tk                                        # import tkinter module
 
-def write_slogan():
-    print("Tkinter is easy to use!")
-
 def StartCom():
     # Setup voor Serial Connectie
     com = 'COM3'  # Slaat de COM Port op in een variable
@@ -63,126 +60,35 @@ label.pack()
 label.config(text="Centrale Project Embedded Systems")
 
 # ------------------------------------------------Knoppen per besturings eenheid---------------------------------------------------------
-# Besturingseenheid 1
 from tkinter import *
-frame1 = tk.Frame(root, highlightbackground="black", highlightthickness=1)
-frame1.pack()
-label = Label(frame1, text="Besturingseenheid 1 ").pack()
-# Knop voor omhoog
-button = tk.Button(frame1,
-                   text="Omhoog",
-                   fg="black", bg="white",
-                   command=lambda : omhoog(1), height=2, width=12,overrelief=RIDGE,cursor="hand2")
-button.pack(side=tk.TOP)
-# Knop voor omlaag
-button = tk.Button(frame1,
-                   text="Omlaag",
-                   fg="black", bg="white",
-                   command=lambda : omlaag(1), height=2, width=12,overrelief=RIDGE,cursor="hand2")
-button.pack(side=tk.TOP)
-#Knop voor grafiek
-button = tk.Button(frame1,
-                   text="Grafiek",
-                   fg="black", bg="white",
-                   command=lambda : grafiek(1), height=2, width=12,overrelief=RIDGE,cursor="hand2")
-button.pack(side=tk.TOP)
-frame1.pack(side=tk.LEFT)
+i = 0
+e = 4 #Staat op 4 omdat wij als project groep 4 leden hebben en dus 4 bordjes
+#e = input("Aantal besturingseenheden: ") # Voor developpment uitgecommend
+while(i < int(e)):
+    frame = tk.Frame(root, highlightbackground="black", highlightthickness=1) #zet een frame in elkaar voor de knoppen
+    frame.pack()
+    label = Label(frame, text="Besturingseenheid "+str(i+1)).pack() #geeft een label aan een frame
+    # Knop voor omhoog
+    button = tk.Button(frame,
+                       text="Omhoog",
+                       fg="black", bg="white",
+                       command=lambda: omhoog(i), height=2, width=12, overrelief=RIDGE, cursor="hand2")
+    button.pack(side=tk.TOP)
+    # Knop voor omlaag
+    button = tk.Button(frame,
+                       text="Omlaag",
+                       fg="black", bg="white",
+                       command=lambda: omlaag(i), height=2, width=12, overrelief=RIDGE, cursor="hand2")
+    button.pack(side=tk.TOP)
+    # Knop voor grafiek
+    button = tk.Button(frame,
+                       text="Grafiek",
+                       fg="black", bg="white",
+                       command=lambda: grafiek(i), height=2, width=12, overrelief=RIDGE, cursor="hand2")
+    button.pack(side=tk.TOP) #zorgt ervoor dat alle knoppen onder elkaar staan
+    frame.pack(side=tk.LEFT) #zorgt ervoor dat alle frames naast elkaar komen
+    i = i + 1
 
-# Besturingseenheid 2
-frame2 = tk.Frame(root,highlightbackground="black", highlightthickness=1)
-frame2.pack()
-label = Label(frame2, text="Besturingseenheid 2 ").pack()
-# Knop voor omhoog
-button = tk.Button(frame2,
-                   text="Omhoog",
-                   fg="black", bg="white",
-                   command=lambda : omhoog(2), height=2, width=12,overrelief=RIDGE,cursor="hand2")
-button.pack(side=tk.TOP)
-# Knop voor omlaag
-button = tk.Button(frame2,
-                   text="Omlaag",
-                   fg="black", bg="white",
-                   command=lambda : omlaag(2), height=2, width=12,overrelief=RIDGE,cursor="hand2")
-button.pack(side=tk.TOP)
-#Knop voor grafiek
-button = tk.Button(frame2,
-                   text="Grafiek",
-                   fg="black", bg="white",
-                   command=lambda : grafiek(2), height=2, width=12,overrelief=RIDGE,cursor="hand2")
-button.pack(side=tk.TOP)
-frame2.pack(side=tk.LEFT)
-
-# Besturingseenheid 3
-frame3 = tk.Frame(root,highlightbackground="black", highlightthickness=1)
-frame3.pack()
-label = Label(frame3, text="Besturingseenheid 3 ").pack()
-# Knop voor omhoog
-button = tk.Button(frame3,
-                   text="Omhoog",
-                   fg="black", bg="white",
-                   command=lambda : omhoog(3), height=2, width=12,overrelief=RIDGE,cursor="hand2")
-button.pack(side=tk.TOP)
-# Knop voor omlaag
-button = tk.Button(frame3,
-                   text="Omlaag",
-                   fg="black", bg="white",
-                   command=lambda : omlaag(3), height=2, width=12,overrelief=RIDGE,cursor="hand2")
-button.pack(side=tk.TOP)
-#Knop voor grafiek
-button = tk.Button(frame3,
-                   text="Grafiek",
-                   fg="black", bg="white",
-                   command=lambda : grafiek(3), height=2, width=12,overrelief=RIDGE,cursor="hand2")
-button.pack(side=tk.TOP)
-frame3.pack(side=tk.LEFT)
-
-# Besturingseenheid 4
-frame4 = tk.Frame(root,highlightbackground="black", highlightthickness=1)
-frame4.pack()
-label = Label(frame4, text="Besturingseenheid 4 ").pack()
-# Knop voor omhoog
-button = tk.Button(frame4,
-                   text="Omhoog",
-                   fg="black", bg="white",
-                   command=lambda : omhoog(3), height=2, width=12,overrelief=RIDGE,cursor="hand2")
-button.pack(side=tk.TOP)
-# Knop voor omlaag
-button = tk.Button(frame4,
-                   text="Omlaag",
-                   fg="black", bg="white",
-                   command=lambda : omlaag(3), height=2, width=12,overrelief=RIDGE,cursor="hand2")
-button.pack(side=tk.TOP)
-#Knop voor grafiek
-button = tk.Button(frame4,
-                   text="Grafiek",
-                   fg="black", bg="white",
-                   command=lambda : grafiek(4), height=2, width=12,overrelief=RIDGE,cursor="hand2")
-button.pack(side=tk.TOP)
-frame4.pack(side=tk.LEFT)
-
-# Besturingseenheid 5
-frame5 = tk.Frame(root,highlightbackground="black", highlightthickness=1)
-frame5.pack()
-label = Label(frame5, text="Besturingseenheid 5 ").pack()
-# Knop voor omhoog
-button = tk.Button(frame5,
-                   text="Omhoog",
-                   fg="black", bg="white",
-                   command=lambda : omhoog(3), height=2, width=12,overrelief=RIDGE,cursor="hand2")
-button.pack(side=tk.TOP)
-# Knop voor omlaag
-button = tk.Button(frame5,
-                   text="Omlaag",
-                   fg="black", bg="white",
-                   command=lambda : omlaag(3), height=2, width=12,overrelief=RIDGE,cursor="hand2")
-button.pack(side=tk.TOP)
-#Knop voor grafiek
-button = tk.Button(frame5,
-                   text="Grafiek",
-                   fg="black", bg="white",
-                   command=lambda : grafiek(5), height=2, width=12,overrelief=RIDGE,cursor="hand2")
-button.pack(side=tk.TOP)
-frame5.pack(side=tk.LEFT)
 #------------------------------------------------------------Tekst-----------------------------------------------------------------
 Tekst = "Project Leden:\nKarel Koster\nMatteo Geertsema\nMark de Vries\nRies Bezemer"
 msg = tk.Message(root, text = Tekst)
