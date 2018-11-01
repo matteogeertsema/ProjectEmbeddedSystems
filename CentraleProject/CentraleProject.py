@@ -1,6 +1,10 @@
 import serial                                               # import pySerial module
 import time                                                 # import time module
 import tkinter as tk                                        # import tkinter module
+import serial.tools.list_ports                              # import list_port van de serial module
+
+Ports = []
+PortEenheid = {}
 
 def StartCom():
     # Setup voor Serial Connectie
@@ -28,14 +32,27 @@ def StartCom():
     print("Port " + com + " wordt afgesloten!")
     ComPort.close()  # Close the C/OM Port
 
+# ----------------------------------------------------------- Functies -------------------------------------------------------
+    # Kijkt welke ports allemaal gebruikt worden //Autheur Ries Bezemer
+def GetPorts():
+    print("Ports scanning...\nPlease wait...")
+    ports = serial.tools.list_ports.comports(include_links=False)
+    for port, desc, name  in sorted(ports):
+        if (desc.split(' ', 1)[0] == "Serieel"):                # Filtert de bluetooth ComPorts
+            Ports.append(port)                                  # Voegt de ports toe aan een list voor de drop down menu
+
+    # Doet het zonnescherm omhoog //Autheur Ries Bezemer
 def omhoog(eenheid):
     print("Besturingseenheid "+str(eenheid)+" wordt omhoog gedaan")
     print("Een moment geduld alstublieft...")
+    GetPorts()
 
+    # Doet het zonnescherm omlaag //Autheur Ries Bezemer
 def omlaag(eenheid):
     print("Besturingseenheid " + str(eenheid) + " wordt omlaag gedaan")
     print("Een moment geduld alstublieft...")
 
+    # Drukt een grafiek af //Autheur Ries Bezemer
 def grafiek(eenheid):
     print("De grafiek voor besturingseenheid "+str(eenheid)+" wordt getekend")
     Grafiek = tk.Tk()
@@ -50,7 +67,12 @@ def grafiek(eenheid):
                        command=Grafiek.destroy)
     button.pack(side=tk.LEFT)
 
-# ------------------------------------------------Buildup van gui-----------------------------------------------------------------------
+def SetWaarde(eenheid):
+    print("Poort "+str(eenheid)+" is geselecteerd")
+    PortEenheid[i] = eenheid
+    print(PortEenheid)
+
+# ------------------------------------------------Buildup van gui //Autheur Ries Bezemer -----------------------------------------
 root = tk.Tk()
 root.title("Centrale Project Embedded Systems")
 
@@ -58,8 +80,8 @@ root.title("Centrale Project Embedded Systems")
 label = tk.Label(root, fg="dark green")
 label.pack()
 label.config(text="Centrale Project Embedded Systems")
-
-# ------------------------------------------------Knoppen per besturings eenheid---------------------------------------------------------
+GetPorts()
+# ------------------------------------------------Knoppen //Autheur Ries Bezemer ---------------------------------------------------
 from tkinter import *
 i = 0
 e = 4 #Staat op 4 omdat wij als project groep 4 leden hebben en dus 4 bordjes
@@ -68,6 +90,11 @@ while(i < int(e)):
     frame = tk.Frame(root, highlightbackground="black", highlightthickness=1) #zet een frame in elkaar voor de knoppen
     frame.pack()
     label = Label(frame, text="Besturingseenheid "+str(i+1)).pack() #geeft een label aan een frame
+    # Selecteer COM port
+    variable = StringVar(root)
+    variable.set("Selecteer een poort")
+    Menu = OptionMenu(frame, variable, *Ports, command=lambda x : SetWaarde(i))
+    Menu.pack(side=tk.TOP)
     # Knop voor omhoog
     button = tk.Button(frame,
                        text="Omhoog",
@@ -89,7 +116,7 @@ while(i < int(e)):
     frame.pack(side=tk.LEFT) #zorgt ervoor dat alle frames naast elkaar komen
     i = i + 1
 
-#------------------------------------------------------------Tekst-----------------------------------------------------------------
+#------------------------------------------------------------Tekst //Autheur Ries Bezemer -------------------------------------------------
 Tekst = "Project Leden:\nKarel Koster\nMatteo Geertsema\nMark de Vries\nRies Bezemer"
 msg = tk.Message(root, text = Tekst)
 msg.config(bg='White', font=('Arial', 14))

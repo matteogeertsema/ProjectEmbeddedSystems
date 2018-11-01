@@ -2,9 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d0bb57fe-334a-467d-9249-370703c4ff8f" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/CentraleProject.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Test.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CentraleProject.py" beforeDir="false" afterPath="$PROJECT_DIR$/CentraleProject.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -45,25 +44,26 @@
     <session id="-1277731253">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="7" />
+          <entry key="project.closed" value="9" />
           <entry key="project.open.time.0" value="1" />
           <entry key="project.open.time.20" value="1" />
-          <entry key="project.open.time.3" value="4" />
+          <entry key="project.open.time.3" value="5" />
           <entry key="project.open.time.4" value="1" />
-          <entry key="project.opened" value="7" />
+          <entry key="project.open.time.6" value="1" />
+          <entry key="project.opened" value="9" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
           <entry key="dummy" value="20" />
-          <entry key="py" value="4212" />
-          <entry key="txt" value="15" />
+          <entry key="py" value="6473" />
+          <entry key="txt" value="21" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="PLAIN_TEXT" value="35" />
-          <entry key="Python" value="4212" />
+          <entry key="PLAIN_TEXT" value="41" />
+          <entry key="Python" value="6473" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
@@ -84,13 +84,14 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/CentraleProject.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="795">
-              <caret line="143" column="26" selection-start-line="143" selection-start-column="26" selection-end-line="143" selection-end-column="26" />
+            <state relative-caret-position="408">
+              <caret line="90" column="16" lean-forward="true" selection-start-line="90" selection-start-column="16" selection-end-line="90" selection-end-column="16" />
               <folding>
                 <element signature="e#0#84#0" expanded="true" />
-                <marker date="1541020026459" expanded="true" signature="249:251" ph="..." />
-                <marker date="1541020026459" expanded="true" signature="324:2272" ph="..." />
-                <marker date="1541020026459" expanded="true" signature="1696:2135" ph="..." />
+                <marker date="1541065140598" expanded="true" signature="395:3234" ph="..." />
+                <marker date="1541065140598" expanded="true" signature="1731:2117" ph="..." />
+                <marker date="1541065140598" expanded="true" signature="2536:3104" ph="..." />
+                <marker date="1541065140598" expanded="true" signature="3103:3104" ph="..." />
               </folding>
             </state>
           </provider>
@@ -128,7 +129,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -167,6 +167,7 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -271,7 +272,14 @@
       <option name="project" value="LOCAL" />
       <updated>1540985269185</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="V 0.3.0.1">
+      <created>1541021628292</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1541021628292</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TodoView">
@@ -293,7 +301,7 @@
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
       <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49947312" weight="0.19393283" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.3997833" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.32936078" />
@@ -313,7 +321,8 @@
     <MESSAGE value="V 0.1.1" />
     <MESSAGE value="V 0.1.2" />
     <MESSAGE value="V 0.1.21" />
-    <option name="LAST_COMMIT_MESSAGE" value="V 0.1.21" />
+    <MESSAGE value="V 0.3.0.1" />
+    <option name="LAST_COMMIT_MESSAGE" value="V 0.3.0.1" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/venv/Lib/site-packages/serial/test.py">
@@ -341,13 +350,14 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/CentraleProject.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="795">
-          <caret line="143" column="26" selection-start-line="143" selection-start-column="26" selection-end-line="143" selection-end-column="26" />
+        <state relative-caret-position="408">
+          <caret line="90" column="16" lean-forward="true" selection-start-line="90" selection-start-column="16" selection-end-line="90" selection-end-column="16" />
           <folding>
             <element signature="e#0#84#0" expanded="true" />
-            <marker date="1541020026459" expanded="true" signature="249:251" ph="..." />
-            <marker date="1541020026459" expanded="true" signature="324:2272" ph="..." />
-            <marker date="1541020026459" expanded="true" signature="1696:2135" ph="..." />
+            <marker date="1541065140598" expanded="true" signature="395:3234" ph="..." />
+            <marker date="1541065140598" expanded="true" signature="1731:2117" ph="..." />
+            <marker date="1541065140598" expanded="true" signature="2536:3104" ph="..." />
+            <marker date="1541065140598" expanded="true" signature="3103:3104" ph="..." />
           </folding>
         </state>
       </provider>
