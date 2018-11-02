@@ -1,6 +1,6 @@
-#include "AVR_TTC_scheduler.h"
 #include <avr/io.h>
 #include <avr/interrupt.h>
+#include "AVR_TTC_scheduler.h"
 
 // The array of tasks
 sTask SCH_tasks_G[SCH_MAX_TASKS];
@@ -156,7 +156,6 @@ void SCH_Init_T1(void)
    {
       SCH_Delete_Task(i);
    }
-            2
    // Set up Timer 1
    // Values for 1ms and 10ms ticks are provided for various crystals
 
@@ -223,16 +222,3 @@ ISR(TIMER1_COMPA_vect)
 }
 
 // ------------------------------------------------------------------
-
-int main()
-{
-	
-	SCH_Init_T1(); // init de timer en verwijder alle taken
-	SCH_Add_Task(counting,1000,0)
-	SCH_Start(); // start de scheduler
-	
-	while (1) {
-		SCH_Dispatch_Tasks();
-	}
-	return 0
-}

@@ -18,7 +18,7 @@
 #include <stdint.h>
 #define F_CPU 16E6
 #include <util/delay.h>
-#include "AVR_TTC_scheduler.h"
+#include "AVR_TTC_scheduler.c"
 
 #define HIGH 0x1
 #define LOW  0x0
@@ -27,7 +27,7 @@ const uint8_t data = 0;
 const uint8_t clock = 1;
 const uint8_t strobe = 2;
 
-uint8_t counting(void); // need to put them in .h
+void counting(void); // need to put them in .h
 
 // read value from pin
 int read(uint8_t pin)
@@ -89,7 +89,7 @@ void setup()
 //  reset();
 }
 
-uint8_t counting()
+void counting()
 {
                                  /*0*/  /*1*/   /*2*/  /*3*/  /*4*/  /*5*/  /*6*/  /*7*/   /*8*/  /*9*/
     uint8_t digits[] = { 0x3f, 0x06, 0x5b, 0x4f, 0x66, 0x6d, 0x7d, 0x07, 0x7f, 0x6f };
@@ -128,26 +128,21 @@ uint8_t counting()
     write(strobe, HIGH);
 
    teller++;
-    return 0;
 }
 
 
 int main()
 {
-    typedef enum {COUNTING_MODE=0} mode_t;
-    mode_t mode = COUNTING_MODE;
 
     setup();
+	SCH_Init_T1(); // init de timer en verwijder alle taken
+	SCH_Add_Task(counting,0,50);
+	SCH_Start(); // start de scheduler
+	
 
     while (1) {
-        switch(mode)
-        {
-            case COUNTING_MODE:
-                mode += counting(); // keep on counting until done
-                break;
-        }
-
-       _delay_ms(100);
+    SCH_Dispatch_Tasks();
+       
     }
     
     return(0);
