@@ -2,35 +2,11 @@ import serial                                               # import pySerial mo
 import time                                                 # import time module
 import tkinter as tk                                        # import tkinter module
 from tkinter import *
+from tkinter import messagebox
 import serial.tools.list_ports                              # import list_port van de serial module
 
 Ports= []
-
-def StartCom():
-    # Setup voor Serial Connectie
-    com = 'COM3'  # Slaat de COM Port op in een variable
-    print(com + " wordt opgestart...")
-    ComPort = serial.Serial(com)  # open the COM Port
-    print("Checking ComPort: " + ComPort.name)  # Checkt of de COM Port goed is ingesteld
-    ComPort.baudrate = 9600  # set Baud rate to 9600
-    ComPort.bytesize = 8  # Number of data bits = 8
-    ComPort.parity = 'N'  # No parity
-    ComPort.stopbits = 1  # Number of Stop bits = 1
-
-    # Schrijft data naar de poort
-    print("Checking if port is open: " + str(ComPort.is_open))  # Checkt of de compoNMKrt open staat
-    input = bytearray(b'Test')  # Input naar de arduino in een variabele
-    ComPort.write(input)  # Schrijft de waardes naar de arduino
-    print("Data wordt verzonden...")
-
-    # Leest de data van de poort
-    print("Waiting for returning data...")
-    output = ComPort.readline()  # Wait and read data
-    print(output)  # Drukt de output af
-
-    # Sluit de seriele connectie af
-    print("Port " + com + " wordt afgesloten!")
-    ComPort.close()  # Close the C/OM Port
+ToegewezenPorts = {}
 
 # ----------------------------------------------------------- Functies -------------------------------------------------------
 # Kijkt welke ports allemaal gebruikt worden //Autheur Ries Bezemer
@@ -52,8 +28,40 @@ class BedieningsEenheid(Frame):
         self.eenheid = i + 1
         self.BedPaneel()
         self.poort = ''
-        self.MaxUitrol = 160
+        self.MaxUitrol = 35
+        self.ComPort = ''
 
+    def StartCom(self):
+        # Setup voor Serial Connectie
+        poort = self.poort
+        print(poort + " wordt opgestart...")
+        self.ComPort = serial.Serial(poort)  # open the COM Port
+        poort = self.ComPort
+        print("Checking ComPort: " + poort.name)  # Checkt of de COM Port goed is ingesteld
+        poort.baudrate = 9600  # set Baud rate to 9600
+        poort.bytesize = 8  # Number of data bits = 8
+        poort.parity = 'N'  # No parity
+        poort.stopbits = 1  # Number of Stop bits = 1
+
+    def SchrijfData(self):
+        # Schrijft data naar de poort
+        poort = self.ComPort
+        print("Checking if port is open: " + str(poort.is_open))  # Checkt of de compoNMKrt open staat
+        input = bytearray(b'Test')  # Input naar de arduino in een variabele
+        poort.write(input)  # Schrijft de waardes naar de arduino
+        print("Data wordt verzonden...")
+
+    def OntvangData(self):
+        # Leest de data van de poort
+        poort = self.Comport
+        print("Waiting for returning data...")
+        output = poort.readline()  # Wait and read data
+        print(output)  # Drukt de output af
+    def EndCom(self):
+        # Sluit de seriele connectie af
+        poort = self.ComPort
+        print("Port " + self.poort + " wordt afgesloten!")
+        poort.close()  # Close the C/OM Port
         # Doet het zonnescherm omhoog //Autheur Ries Bezemer
     def omhoog(self):
         print("Besturingseenheid " + str(self.eenheid) + " wordt omhoog gedaan")
@@ -81,8 +89,21 @@ class BedieningsEenheid(Frame):
 
         # Stelt de poort van de bedieningseenheid in //Autheur Ries Bezemer
     def SetPoort(self,waarde):
-        self.poort = waarde
-        print("De COMport van bedieningseenheid "+str(self.eenheid)+" is op "+str(self.poort)+" gezet")
+        # Kijkt of de poort al is toegewezen aan een andere bedieningseenheid
+        if waarde in ToegewezenPorts:
+            # Als de poort al is toegewezen dan wordt er om een confirmatie gevraagd
+            print("De Poort die u probeert toe te wijzen is al aan een andere eenheid toegewezen")
+            if messagebox.askyesno('Let op!', 'De poort die u probeert toe te wijzen is al in gebuik\nWilt u alsnog deze poort instellen?'):
+                self.poort = waarde
+                print("De COMport van bedieningseenheid " + str(self.eenheid) + " is op " + str(self.poort) + " gezet")
+                ToegewezenPorts[waarde] = self.eenheid
+            else:
+                print("Poort "+str(waarde)+" wordt niet aan bedieningseenheid "+str(self.eenheid)+" toegevoegd")
+        # Als de poort niet toegewezen is dan wordt hij zonder confirmatie toegewezen
+        else:
+            self.poort = waarde
+            print("De COMport van bedieningseenheid " + str(self.eenheid) + " is op " + str(self.poort) + " gezet")
+            ToegewezenPorts[waarde] = self.eenheid
 
         # Stelt de maximale uitrolstand in //Autheur Ries Bezemer
     def InvoerWaarde(self,waarde,eenheid):
