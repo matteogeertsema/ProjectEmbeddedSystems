@@ -1,12 +1,16 @@
 import serial                                               # import pySerial module
 import time                                                 # import time module
 import tkinter as tk                                        # import tkinter module
+import matplotlib.pyplot as plt                             # import Matplotlib module, voor het plotten van grafieken
+import matplotlib.animation as animation
+
+import serial.tools.list_ports                              # import Serial module, voor het aansturen van de arduino
 from tkinter import *
 from tkinter import messagebox
-import serial.tools.list_ports                              # import list_port van de serial module
 
 Ports= []
 ToegewezenPorts = {}
+
 
 # ----------------------------------------------------------- Functies -------------------------------------------------------
 # Kijkt welke ports allemaal gebruikt worden //Autheur Ries Bezemer
@@ -20,7 +24,7 @@ def GetPorts():
     if(Ports.__len__()==0):
         print("Er zijn geen bedieningseenheden aangesloten")
 
-# ------------------------------------------------Classes-------------------------------------------------------------------------
+# -----------------------------------------------Classes-------------------------------------------------------------------------
 class BedieningsEenheid(Frame):
         # De constructor van de classe //Autheur Ries Bezemer
     def __init__(self,frame,i):
@@ -30,6 +34,8 @@ class BedieningsEenheid(Frame):
         self.poort = ''
         self.MaxUitrol = 35
         self.ComPort = ''
+        self.fig = plt.figure()
+        self.ax1 = self.fig.add_subplot(1, 1, 1)
 
     def StartCom(self):
         # Setup voor Serial Connectie
@@ -43,25 +49,58 @@ class BedieningsEenheid(Frame):
         poort.parity = 'N'  # No parity
         poort.stopbits = 1  # Number of Stop bits = 1
 
-    def SchrijfData(self):
-        # Schrijft data naar de poort
+    def SchrijfData(self,sensor):
+      # Schrijft data naar de poort
+        self.StartCom()
         poort = self.ComPort
+        input = "b\'"+sensor+"\'"
         print("Checking if port is open: " + str(poort.is_open))  # Checkt of de compoNMKrt open staat
-        input = bytearray(b'Test')  # Input naar de arduino in een variabele
+        input = bytearray(input)  # Input naar de arduino in een variabele
         poort.write(input)  # Schrijft de waardes naar de arduino
         print("Data wordt verzonden...")
 
     def OntvangData(self):
-        # Leest de data van de poort
+      # Leest de data van de poort
         poort = self.Comport
         print("Waiting for returning data...")
         output = poort.readline()  # Wait and read data
-        print(output)  # Drukt de output af
+        return output  # Geeft de ontvangen data terug
+
     def EndCom(self):
-        # Sluit de seriele connectie af
+      # Sluit de seriele connectie af
         poort = self.ComPort
         print("Port " + self.poort + " wordt afgesloten!")
         poort.close()  # Close the C/OM Port
+
+        # Haalt data op van de sensor, zet de waardes vervolgens in een txt file //Autheur Ries Bezemer
+    def GetGrafiekData(self,sensor):
+        print("Grafiek Data wordt opgehaald")
+        self.SchrijfData(sensor)
+        data = self.OntvangData()
+        BestandNaam = "Besturingseenheid" + self.eenheid + "Grafiek.txt"
+        file = open(BestandNaam, 'r')
+        lines = file.splitlines()
+        x = lines[-1].split(',')[0]
+        waarde = x+","+data
+        file = open(BestandNaam, 'w')
+        file.write(waarde)
+
+        # Tekent een grafiek //Autheur: sentdex op Youtube
+    def animate(self, i):
+        print("Test")
+        self.GetGrafiekData(4)
+        graph_data = open('example.txt', 'r').read()
+        lines = graph_data.split('\n')
+        xs = []
+        ys = []
+        for line in lines:
+            if len(line) > 1:
+                x, y = line.split(',')
+                xs.append(float(x))
+                ys.append(float(y))
+        self.ax1.clear()
+        self.ax1.plot(xs, ys)
+
         # Doet het zonnescherm omhoog //Autheur Ries Bezemer
     def omhoog(self):
         print("Besturingseenheid " + str(self.eenheid) + " wordt omhoog gedaan")
@@ -75,35 +114,27 @@ class BedieningsEenheid(Frame):
         # Drukt een grafiek af //Autheur Ries Bezemer
     def grafiek(self):
         print("De grafiek voor besturingseenheid " + str(self.eenheid) + " wordt getekend")
-        Grafiek = tk.Tk()
-        Grafiek.title("Grafiek besturingseenheid " + str(self.eenheid))
-        fgrafiek = tk.Frame(Grafiek)
-        fgrafiek.pack()
-
-        # Button om de grafiek af te sluiten
-        button = tk.Button(fgrafiek,
-                           text="QUIT",
-                           fg="red",
-                           command=Grafiek.destroy)
-        button.pack(side=tk.LEFT)
+        ani = animation.FuncAnimation(self.fig, self.animate, interval=1000)
+        plt.show()
 
         # Stelt de poort van de bedieningseenheid in //Autheur Ries Bezemer
     def SetPoort(self,waarde):
         # Kijkt of de poort al is toegewezen aan een andere bedieningseenheid
-        if waarde in ToegewezenPorts:
-            # Als de poort al is toegewezen dan wordt er om een confirmatie gevraagd
-            print("De Poort die u probeert toe te wijzen is al aan een andere eenheid toegewezen")
-            if messagebox.askyesno('Let op!', 'De poort die u probeert toe te wijzen is al in gebuik\nWilt u alsnog deze poort instellen?'):
+        if(waarde != self.poort):
+            if waarde in ToegewezenPorts:
+                # Als de poort al is toegewezen dan wordt er om een confirmatie gevraagd
+                print("De Poort die u probeert toe te wijzen is al aan een andere eenheid toegewezen")
+                if messagebox.askyesno('Let op!', 'De poort die u probeert toe te wijzen is al in gebuik,\nWilt u alsnog deze poort instellen?'):
+                    self.poort = waarde
+                    print("De COMport van bedieningseenheid " + str(self.eenheid) + " is op " + str(self.poort) + " gezet")
+                    ToegewezenPorts[waarde] = self.eenheid
+                else:
+                    print("Poort "+str(waarde)+" wordt niet aan bedieningseenheid "+str(self.eenheid)+" toegevoegd")
+            # Als de poort niet toegewezen is dan wordt hij zonder confirmatie toegewezen
+            else:
                 self.poort = waarde
                 print("De COMport van bedieningseenheid " + str(self.eenheid) + " is op " + str(self.poort) + " gezet")
                 ToegewezenPorts[waarde] = self.eenheid
-            else:
-                print("Poort "+str(waarde)+" wordt niet aan bedieningseenheid "+str(self.eenheid)+" toegevoegd")
-        # Als de poort niet toegewezen is dan wordt hij zonder confirmatie toegewezen
-        else:
-            self.poort = waarde
-            print("De COMport van bedieningseenheid " + str(self.eenheid) + " is op " + str(self.poort) + " gezet")
-            ToegewezenPorts[waarde] = self.eenheid
 
         # Stelt de maximale uitrolstand in //Autheur Ries Bezemer
     def InvoerWaarde(self,waarde,eenheid):
@@ -153,20 +184,24 @@ class BedieningsEenheid(Frame):
 # ------------------------------------------------Buildup van gui //Autheur Ries Bezemer -----------------------------------------
 print("Een moment geduld het programma wordt opgestart...")
 GetPorts()
-root = tk.Tk()
-root.title("Centrale Project Embedded Systems")
-label = tk.Label(root, fg="dark green")
-label.pack()
-label.config(text="Centrale Project Embedded Systems")
-i = 0
-e = Ports.__len__() #maakt voor elke bordje die aangesloten is een bedienings paneel
-while(i < int(e)):
-    app = BedieningsEenheid(root, i) #Start de knoppen op.
-    i = i + 1
-
+if (Ports.__len__() > 0):
+    root = tk.Tk()
+    root.title("Centrale Project Embedded Systems")
+    label = tk.Label(root, fg="dark green")
+    label.pack()
+    label.config(text="Centrale Project Embedded Systems")
+    i = 0
+    e = Ports.__len__() #maakt voor elke bordje die aangesloten is een bedienings paneel
+    while(i < int(e)):
+        app = BedieningsEenheid(root, i) #Start de knoppen op.
+        i = i + 1
+    tk.mainloop()
+else:
+    Fout = tk.Tk()      #Zorgt ervoor dat er geen leeg windows komt als er een fout melding wordt opgedaan
+    Fout.withdraw()
+    messagebox.showerror("Let Op!", "U heeft geen bedieningseenheid aangesloten\nSluit een bordje aan en probeer het opnieuw!")
 #------------------------------------------------------------Tekst //Autheur Ries Bezemer -------------------------------------------------
 #Tekst = "Project Leden:\nKarel Koster\nMatteo Geertsema\nMark de Vries\nRies Bezemer"
 #msg = tk.Message(root, text = Tekst)
 #msg.config(bg='White', font=('Arial', 14))
 #msg.pack()
-tk.mainloop()
