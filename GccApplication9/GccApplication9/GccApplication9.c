@@ -36,59 +36,51 @@ void transmit(uint8_t data)
 	UDR0 = data;
 }
 
-static volatile int pulse = 0;
-static volatile int i = 0;
+uint8_t hcsr04(){
+		uint8_t count = 0; 
+		
+		PORTD |= (1<<5); 
+		_delay_us(15); //		15 uS pulse naar trigger pin 
+		PORTD &= ~(1<<5); 
+		
+		// deze code is overgenomen van "http://eecs.oregonstate.edu/tekbots/modules/hcsr04"
+		
+		while ((PIND & (1<<4)) != (1<<4)); // Loop doorlopen wanneer echo pin HIGH is 
+		while (1){ 
+			if ((PIND & (1<<4)) != (1<<4)) // Echo pulse on PORTD, Pin 4 is high (detected)
+				return(count); // Return current count
+			_delay_us(39); // delay van 39 sec
+			count ++; // Increment Count
+		}
+}		
+
 
 int main(void)
-
-{
-	int16_t count_a = 0;
-	char show_a[16];
+{	
+	char tot_string[6];
+	uint8_t tijdelijk;
+	float tijdelijk_float;
 	
-	DDRD = 0b11111011;
+	DDRD |= 1<<5; // Setup HC-SR04 Trigger as an output
+	DDRD &= ~(1<<4); // Setup HC-SR04 Echo a an input
 	_delay_ms(50);
-
-	EIMSK |= 1<<INT0;
-	EICRA |= 1<<ISC00;
-	
-	TCCR1A = 0;
-
-	sei();
 	
 	while(1)
 	{
-		PORTD |= (1<<PIND0);
-		_delay_us(15);
-		PORTD &= ~(1<<PIND0);
+		tijdelijk = hcsr04();
+		tijdelijk_float = (float)(tijdelijk) * 40; //een float maken en omrekenen naar uS
+		tijdelijk_float = tijdelijk_float/58; //afstand in cm bereken
 		
-		count_a = (double)pulse / 466.47;
-		count_a = count_a/2;
-		 
-		dtostrf(count_a, 2, 2, show_a);/* count_a to string */
-		strcat(show_a, " cm   ");	/* Concat unit i.e.cm */
-
+		dtostrf(tijdelijk_float, 2, 2, tot_string);// tijdelijk_float naar string 
+		
 		uart_init();
-		UART_Putstring(show_a);
-		transmit('\r');
-		transmit('\n');
+		UART_Putstring(tot_string); UART_Putstring(" cm");
+		transmit('\r'); transmit('\n');
 		_delay_ms(1000);
 		
 	}
 }
 
-ISR(INT0_vect)
-{
-  if(i == 1)
-  {
-    TCCR1B = 0;
-    pulse = TCNT1;
-    TCNT1 = 0;
-    i = 0;
-  }
 
-  if(i==0)
-  {
-    TCCR1B |= (1<<CS10);
-    i = 1;
-  }
-}
+
+
