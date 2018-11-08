@@ -2,6 +2,7 @@ import serial                                               # import pySerial mo
 import time                                                 # import time module
 import tkinter as tk                                        # import tkinter module
 import matplotlib.pyplot as plt                             # import Matplotlib module, voor het plotten van grafieken
+import os.path
 import matplotlib.animation as animation
 
 import serial.tools.list_ports                              # import Serial module, voor het aansturen van de arduino
@@ -10,6 +11,7 @@ from tkinter import messagebox
 
 Ports= []
 ToegewezenPorts = {}
+Henk = 0
 
 
 # ----------------------------------------------------------- Functies -------------------------------------------------------
@@ -31,66 +33,65 @@ class BedieningsEenheid(Frame):
         self.frame = frame
         self.eenheid = i + 1
         self.BedPaneel()
-        self.poort = ''
+        self.poort = 'COM3'
         self.MaxUitrol = 35
         self.ComPort = ''
         self.fig = plt.figure()
         self.ax1 = self.fig.add_subplot(1, 1, 1)
 
-    def StartCom(self):
-        # Setup voor Serial Connectie
-        poort = self.poort
-        print(poort + " wordt opgestart...")
-        self.ComPort = serial.Serial(poort)  # open the COM Port
-        poort = self.ComPort
-        print("Checking ComPort: " + poort.name)  # Checkt of de COM Port goed is ingesteld
-        poort.baudrate = 9600  # set Baud rate to 9600
-        poort.bytesize = 8  # Number of data bits = 8
-        poort.parity = 'N'  # No parity
-        poort.stopbits = 1  # Number of Stop bits = 1
-
-    def SchrijfData(self,sensor):
-      # Schrijft data naar de poort
-        self.StartCom()
-        poort = self.ComPort
-        input = "b\'"+sensor+"\'"
-        print("Checking if port is open: " + str(poort.is_open))  # Checkt of de compoNMKrt open staat
-        input = bytearray(input)  # Input naar de arduino in een variabele
-        poort.write(input)  # Schrijft de waardes naar de arduino
-        print("Data wordt verzonden...")
-
-    def OntvangData(self):
-      # Leest de data van de poort
-        poort = self.Comport
-        print("Waiting for returning data...")
-        output = poort.readline()  # Wait and read data
-        return output  # Geeft de ontvangen data terug
-
-    def EndCom(self):
-      # Sluit de seriele connectie af
-        poort = self.ComPort
-        print("Port " + self.poort + " wordt afgesloten!")
-        poort.close()  # Close the C/OM Port
+    def GetData(self,sensor):
+        import serial, time
+        ComPort = serial.Serial(self.poort)  # open the COM Port
+        ComPort.baudrate = 19200  # set Baud rate to 9600
+        ComPort.bytesize = 8  # Number of data bits = 8
+        ComPort.parity = 'N'  # No parity
+        ComPort.stopbits = 1  # Number of Stop bits = 1
+        # Schrijft data naar de poort
+        sensor = str(sensor)
+        #print("Data wordt verzonden...")
+        time.sleep(1.58)
+        ComPort.write(sensor.encode())
+        # Leest de data van de poort
+        time.sleep(0.5)
+        out = ""
+        while ComPort.inWaiting() > 0:
+            # print(ComPort.in_waiting)
+            out += ComPort.read(1).decode(errors='ignore')
+            print(out)
+        # Sluit de seriele connectie af
+        ComPort.close()  # Close the C/OM Port
+        return(out)
 
         # Haalt data op van de sensor, zet de waardes vervolgens in een txt file //Autheur Ries Bezemer
     def GetGrafiekData(self,sensor):
-        print("Grafiek Data wordt opgehaald")
-        self.SchrijfData(sensor)
-        data = self.OntvangData()
-        BestandNaam = "Besturingseenheid" + self.eenheid + "Grafiek.txt"
-        file = open(BestandNaam, 'r')
-        lines = file.splitlines()
-        x = lines[-1].split(',')[0]
-        waarde = x+","+data
-        file = open(BestandNaam, 'w')
-        file.write(waarde)
+        AantalCrash = 0
+        #print("Grafiek Data wordt opgehaald")
+        data = self.GetData(4)
+        #print("De ontvangen data is:"+data)
+        BestandNaam = "Besturingseenheid" + str(self.eenheid) + "Grafiek.txt"
+        if(os.path.isfile(BestandNaam)):
+            file = open(BestandNaam, 'r').read()
+            file.rstrip("\n")
+            lines = file.split(':')
+            x = lines.__len__()
+        else: x = 0
+        if(data != ""): # Vangt een crash op waar de arduino geen waarde terug geeft
+            waarde = str(x)+','+data+':'
+            lines.append(waarde)
+            print("De waarde die naar de grafiek moet: "+waarde)
+            file = open(BestandNaam, 'a')
+            file.write(lines[x])  # could be any text, appended @ the end of file
+        else:
+            AantalCrash = AantalCrash + 1
+            print(str(AantalCrash)+" Crashes opgevangen")
 
         # Tekent een grafiek //Autheur: sentdex op Youtube
     def animate(self, i):
-        print("Test")
+        print("De Grafiek wordt geüpdated")
+        BestandNaam = "Besturingseenheid" + str(self.eenheid) + "Grafiek.txt"
         self.GetGrafiekData(4)
-        graph_data = open('example.txt', 'r').read()
-        lines = graph_data.split('\n')
+        file = open(BestandNaam, 'r').read()
+        lines = file.split(':')
         xs = []
         ys = []
         for line in lines:
@@ -114,7 +115,7 @@ class BedieningsEenheid(Frame):
         # Drukt een grafiek af //Autheur Ries Bezemer
     def grafiek(self):
         print("De grafiek voor besturingseenheid " + str(self.eenheid) + " wordt getekend")
-        ani = animation.FuncAnimation(self.fig, self.animate, interval=1000)
+        ani = animation.FuncAnimation(self.fig, self.animate, interval=1)
         plt.show()
 
         # Stelt de poort van de bedieningseenheid in //Autheur Ries Bezemer
