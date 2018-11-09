@@ -1,10 +1,15 @@
 #define F_CPU 16E6
 #include <avr/io.h>
-#include <avr/interrupt.h>
 #include <util/delay.h>
 #include <stdlib.h>
+#include "AVR_TTC_scheduler.c"
 
 #define UBBRVAL 51
+
+char tot_string[6];
+uint8_t tijdelijk;
+float tijdelijk_float;
+char input;
 
 void uart_init() {
 	// set the baud rate
@@ -27,6 +32,11 @@ void UART_Putstring(char* eenstring)
 	}
 }
 
+char receive(void) {
+	loop_until_bit_is_set(UCSR0A, RXC0); /* Wait until data exists. */
+	return UDR0;
+}
+
 void transmit(uint8_t data)
 {
 	// wait for an empty transmit buffer
@@ -39,6 +49,9 @@ void transmit(uint8_t data)
 uint8_t hcsr04(){
 		uint8_t count = 0; 
 		
+		DDRD |= 1<<5; // Setup HC-SR04 Trigger as an output
+		DDRD &= ~(1<<4); // Setup HC-SR04 Echo a an input
+		
 		PORTD |= (1<<5); 
 		_delay_us(15); //		15 uS pulse naar trigger pin 
 		PORTD &= ~(1<<5); 
@@ -47,37 +60,36 @@ uint8_t hcsr04(){
 		
 		while ((PIND & (1<<4)) != (1<<4)); // Loop doorlopen wanneer echo pin HIGH is 
 		while (1){ 
+			if (count == 238) // max waarde van 160 bereikt  
+				return(count); // return maximum distance.
 			if ((PIND & (1<<4)) != (1<<4)) // Echo pulse on PORTD, Pin 4 is high (detected)
 				return(count); // Return current count
-			_delay_us(39); // delay van 39 sec
+			_delay_us(39); // delay 40 usec
 			count ++; // Increment Count
 		}
 }		
 
+void berekening_verzend()
+{
+	uart_init();
+	tijdelijk = hcsr04();
+	tijdelijk_float = (float)(tijdelijk) * 39; //een float maken en omrekenen naar uS
+	tijdelijk_float = tijdelijk_float/58; //afstand in cm bereken
+	
+	dtostrf(tijdelijk_float, 2, 2, tot_string);// tijdelijk_float naar string
+	
+	transmit('\r'); transmit('\n');
+	UART_Putstring(tot_string);
+}
 
 int main(void)
-{	
-	char tot_string[6];
-	uint8_t tijdelijk;
-	float tijdelijk_float;
-	
-	DDRD |= 1<<5; // Setup HC-SR04 Trigger as an output
-	DDRD &= ~(1<<4); // Setup HC-SR04 Echo a an input
-	_delay_ms(50);
-	
+{
+	SCH_Init_T1();
+	SCH_Add_Task(berekening_verzend, 0 , 100);
+	SCH_Start();
 	while(1)
-	{
-		tijdelijk = hcsr04();
-		tijdelijk_float = (float)(tijdelijk) * 40; //een float maken en omrekenen naar uS
-		tijdelijk_float = tijdelijk_float/58; //afstand in cm bereken
-		
-		dtostrf(tijdelijk_float, 2, 2, tot_string);// tijdelijk_float naar string 
-		
-		uart_init();
-		UART_Putstring(tot_string); UART_Putstring(" cm");
-		transmit('\r'); transmit('\n');
-		_delay_ms(1000);
-		
+	{		
+		SCH_Dispatch_Tasks();	
 	}
 }
 
