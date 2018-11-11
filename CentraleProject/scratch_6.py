@@ -1,22 +1,11 @@
-import matplotlib.pyplot as plt                             # import Matplotlib module, voor het plotten van grafieken
-import matplotlib.animation as animation
+import sched, time
+s = sched.scheduler(time.time, time.sleep)
+def print_time(): print("From print_time", time.time())
 
-fig = plt.figure()
-ax1 = fig.add_subplot(1,1,1)
-
-def animate(i):
-   ax1 = fig.add_subplot(1,1,1)
-   graph_data = open('example.txt','r').read()
-   lines = graph_data.split('\n')
-   xs = []
-   ys = []
-   for line in lines:
-     if len(line) > 1:
-       x, y = line.split(',')
-       xs.append(x)
-       ys.append(float(y))
-   ax1.clear()
-   ax1.plot(xs,ys)
-
-ani = animation.FuncAnimation(fig, animate, interval=1000)
-plt.show()
+def print_some_times():
+    print(time.time())
+    s.enter(5, 1, print_time, ())
+    s.enter(10, 1, print_time, ())
+    s.run()
+    print(time.time())
+print_some_times()
