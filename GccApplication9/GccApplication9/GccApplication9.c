@@ -10,8 +10,11 @@ char tot_string[6];
 uint8_t tijdelijk;
 float tijdelijk_float;
 char input;
+int temp1;
+int temp2;
 
-void uart_init() {
+void uart_init() 
+{
 	// set the baud rate
 	UBRR0H = 19200;
 	UBRR0L = UBBRVAL;
@@ -32,7 +35,8 @@ void UART_Putstring(char* eenstring)
 	}
 }
 
-char receive(void) {
+char receive(void) 
+{
 	loop_until_bit_is_set(UCSR0A, RXC0); /* Wait until data exists. */
 	return UDR0;
 }
@@ -46,7 +50,8 @@ void transmit(uint8_t data)
 	UDR0 = data;
 }
 
-uint8_t hcsr04(){
+uint8_t hcsr04()
+{
 		uint8_t count = 0; 
 		
 		DDRD |= 1<<5; // Setup HC-SR04 Trigger as an output
@@ -82,10 +87,66 @@ void berekening_verzend()
 	UART_Putstring(tot_string);
 }
 
+void led_groen()
+{
+	DDRB = 0xff;
+	PORTB = 0b00000001;	
+}
+
+void uitrollen()
+{
+	DDRB = 0xff;
+	PORTB = 0b00000110;
+	_delay_ms(1000);
+	PORTB = 0b00000100;
+	_delay_ms(1000);
+}
+
+void inrollen()
+{
+	DDRB = 0xff;
+	PORTB = 0b00000011;
+	_delay_ms(1000);
+	PORTB = 0b00000001;
+	_delay_ms(1000);
+}
+
+void led_rood()
+{
+	DDRB = 0xff;
+	PORTB = 0b00000100;	
+}
+
+void simulatie_motor()
+{
+	temp1 = hcsr04();
+	_delay_ms(100);
+	temp2 = hcsr04();
+	
+	if (tijdelijk_float >= 160)
+	{
+		led_rood();
+	}
+	else if(tijdelijk_float < 5)
+	{
+		led_groen();
+	}
+	else if (tijdelijk_float > 5 && tijdelijk_float < 160 && temp1 < temp2)
+	{
+		uitrollen();
+	}
+	else if (tijdelijk_float > 5 && tijdelijk_float < 160 && temp1 > temp2)
+	{
+		inrollen();
+	}
+	
+}
+
 int main(void)
 {
 	SCH_Init_T1();
-	SCH_Add_Task(berekening_verzend, 0 , 100);
+	SCH_Add_Task(berekening_verzend, 0 , 10);
+	SCH_Add_Task(simulatie_motor, 0, 10);
 	SCH_Start();
 	while(1)
 	{		
