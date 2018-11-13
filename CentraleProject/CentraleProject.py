@@ -28,6 +28,7 @@ def GetPorts():
     if(Ports.__len__()==0):
         print("Er zijn geen bedieningseenheden aangesloten")
 
+# Stelt de comport in //Autheur Ries Bezemer & Jos Bos
 def GetData(sensor,poort):
     ComPort = serial.Serial(poort)  # open the COM Port
     ComPort.baudrate = 19200  # set Baud rate to 9600
@@ -52,7 +53,7 @@ def GetData(sensor,poort):
     return(out)
 
 
-        # Haalt data op van de sensor, zet de waardes vervolgens in een txt file //Autheur Ries Bezemer
+# Haalt data op van de sensor, zet de waardes vervolgens in een txt file //Autheur Ries Bezemer
 def SetGrafiekData(sensor,poort):
     global AantalRuns
     global AantalCrash
@@ -85,11 +86,11 @@ def SetGrafiekData(sensor,poort):
         print(str(AantalCrash)+" Crashes opgevangen")
 # -----------------------------------------------Classes-------------------------------------------------------------------------
 class BedieningsEenheid(Frame):
-        # De constructor van de classe //Autheur Ries Bezemer
+    # De constructor van de classe //Autheur Ries Bezemer
     def __init__(self,frame,i):
         self.frame = frame
         self.eenheid = i + 1
-        self.poort = 'COM3'
+        self.poort = " "
         self.MaxUitrol = 35
         self.ComPort = ''
         self.fig = plt.figure()
@@ -99,7 +100,7 @@ class BedieningsEenheid(Frame):
         self.tempvar = 0
         self.BedPaneel()
 
-        # Tekent een grafiek //Autheur: sentdex op Youtube
+    # Tekent een grafiek //Autheur: sentdex op Youtube
     def animate(self, i):
         BestandNaam = "Besturingseenheid" + str(self.poort) + "Grafiek.txt"
         if (os.path.isfile(BestandNaam)):
@@ -116,6 +117,7 @@ class BedieningsEenheid(Frame):
             self.ax1.plot(xs, ys)
         else: f= open(BestandNaam,"w+")
 
+    # Vraaft de temperatuur op //Autheur Ries Bezemer
     def getTempLabelData(self):
         sensor = 5
         BestandNaam = "Besturingseenheid" + str(self.poort) + "Grafiek.txt"
@@ -127,6 +129,7 @@ class BedieningsEenheid(Frame):
         x, y = line.split(',')
         self.tempvar.set(y)
 
+    # Vraagt de lichtintensiteit op //Autheur Ries Bezemer
     def getLichtLabelData(self):
         sensor = 6
         BestandNaam = "Besturingseenheid" + str(self.poort) + "Grafiek.txt"
@@ -138,23 +141,23 @@ class BedieningsEenheid(Frame):
         x, y = line.split(',')
         self.lichtvar.set(y)
 
-        # Doet het zonnescherm omhoog //Autheur Ries Bezemer
+    # Doet het zonnescherm omhoog //Autheur Ries Bezemer
     def omhoog(self):
         print("Besturingseenheid " + str(self.eenheid) + " wordt omhoog gedaan")
         print("Een moment geduld alstublieft...")
 
-        # Doet het zonnescherm omlaag //Autheur Ries Bezemer
+    # Doet het zonnescherm omlaag //Autheur Ries Bezemer
     def omlaag(self):
         print("Besturingseenheid " + str(self.eenheid) + " wordt omlaag gedaan")
         print("Een moment geduld alstublieft...")
 
-        # Drukt een grafiek af //Autheur Ries Bezemer
+    # Drukt een grafiek af //Autheur Ries Bezemer
     def grafiek(self):
         print("De grafiek voor besturingseenheid " + str(self.eenheid) + " wordt getekend")
         ani = animation.FuncAnimation(self.fig, self.animate, interval=1000)
         plt.show()
 
-        # Stelt de poort van de bedieningseenheid in //Autheur Ries Bezemer
+    # Stelt de poort van de bedieningseenheid in //Autheur Ries Bezemer
     def SetPoort(self,waarde):
         # Kijkt of de poort al is toegewezen aan een andere bedieningseenheid
         if(waarde != self.poort):
@@ -172,21 +175,24 @@ class BedieningsEenheid(Frame):
                 self.poort = waarde
                 print("De COMport van bedieningseenheid " + str(self.eenheid) + " is op " + str(self.poort) + " gezet")
                 ToegewezenPorts[waarde] = self.eenheid
+                Thread(target=self.SensorWaardes).start()  # Zet het genereren van waardes op een andere thread, zodat het programma soepeler loopt.
+                self.buttonGrafiek.configure(state=NORMAL, cursor="hand2")
+                self.buttonOmlaag.configure(state=NORMAL, cursor="hand2")
+                self.buttonOmhoog.configure(state=NORMAL, cursor="hand2")
+                self.buttonSensor.configure(state=NORMAL, cursor="hand2")
+                self.buttonMax.configure(state=NORMAL, cursor="hand2")
+                self.tempvar.set(self.tempvar)
+                self.lichtvar.set(self.lichtvar)
 
-        # Stelt de maximale uitrolstand in //Autheur Ries Bezemer
+
+    # Stelt de maximale uitrolstand in //Autheur Ries Bezemer
     def InvoerWaarde(self,waarde,eenheid):
         self.MaxUitrol = waarde
         print("De maximale uitrolwaarde voor bedieningseenheid "+str(eenheid)+" is: "+str(waarde))
         self.var.set(self.MaxUitrol)
         self.frame.update_idletasks()
 
-    def GetSensorWaardes(self):
-        root = tk.Tk()
-        SensorFrame = tk.Frame(root, highlightbackground="black",highlightthickness=1)  # zet een frame in elkaar voor de knoppen
-        SensorFrame.pack()
-        label = Label(SensorFrame, text="Sensor Waardes" + str(self.eenheid)) # Geeft een label aan de frame
-        label.pack()
-
+    # Vraagt de waardes van de sensor op //Autheur Ries Bezemer
     def SensorWaardes(self):
         i = 1
         while (i > 0):
@@ -196,9 +202,8 @@ class BedieningsEenheid(Frame):
             self.getTempLabelData()
             self.frame.update_idletasks()
 
-        # Drukt de knoppen van de bedieningseenheid af //Autheur Ries Bezemer
+    # Drukt de knoppen van de bedieningseenheid af //Autheur Ries Bezemer
     def BedPaneel(self):
-        Thread(target=self.SensorWaardes).start()  # Zet het genereren van waardes op een andere thread, zodat het programma soepeler loopt.
         frame = tk.Frame(self.frame, highlightbackground="black",highlightthickness=1)  # zet een frame in elkaar voor de knoppen
         frame.pack()
         label = Label(frame, text="Besturingseenheid " + str(self.eenheid)) # Geeft een label aan de frame
@@ -213,16 +218,19 @@ class BedieningsEenheid(Frame):
         text.pack(side=LEFT)
         text = Label(tempframe, text=" °C")
         text.pack(side=RIGHT)
-        temp = Label(tempframe, textvariable=self.tempvar)
-        temp.pack(side=RIGHT)
+        self.tempvar.set('N/A')
+        tempLabel = Label(tempframe, textvariable=self.tempvar)
+        tempLabel.pack(side=RIGHT)
 
-        # Updating Label voor de temperatuur
+        # Updating Label voor de lichtintensiteit
         self.lichtvar = StringVar()
         self.lichtvar.set(self.lichtvar)
         lichtframe = tk.Frame(frame)
         lichtframe.pack(side=TOP)
         text = Label(lichtframe, text="Lichtintensiteit: ")
         text.pack(side=LEFT)
+        self.lichtvar.set('N/A')
+        # Zorgt ervoor dat er geen rare waarde in het veld komt als er geen ComPort is aangesloten
         temp = Label(lichtframe, textvariable=self.lichtvar)
         temp.pack(side=RIGHT)
 
@@ -230,36 +238,42 @@ class BedieningsEenheid(Frame):
         variable = StringVar(self.frame)
         variable.set("Selecteer een poort")
 
-        Menu = tk.OptionMenu(frame,variable,*Ports,command=self.SetPoort)
+        Menu = tk.OptionMenu(frame, variable, *Ports, command=self.SetPoort)
         Menu.pack(side=tk.TOP)
+
         # Knop voor omhoog
-        button = tk.Button(frame,
+        self.buttonOmhoog = tk.Button(frame,
                            text="Omhoog",
                            fg="black", bg="white",
-                           command=lambda: self.omhoog(), height=2, width=12, overrelief=RIDGE, cursor="hand2")
-        button.pack(side=tk.TOP)
+                           command=lambda: self.omhoog(), height=2, width=12, overrelief=RIDGE, state=DISABLED)
+        self.buttonOmhoog.pack(side=tk.TOP)
+
         # Knop voor omlaag
-        button = tk.Button(frame,
+        self.buttonOmlaag = tk.Button(frame,
                            text="Omlaag",
                            fg="black", bg="white",
-                           command=lambda: self.omlaag(), height=2, width=12, overrelief=RIDGE, cursor="hand2")
-        button.pack(side=tk.TOP)
+                           command=lambda: self.omlaag(), height=2, width=12, overrelief=RIDGE, state=DISABLED)
+        self.buttonOmlaag.pack(side=tk.TOP)
+
         # Knop voor grafiek
-        button = tk.Button(frame,
+        self.buttonGrafiek = tk.Button(frame,
                            text="Grafiek",
                            fg="black", bg="white",
-                           command=lambda: self.grafiek(), height=2, width=12, overrelief=RIDGE, cursor="hand2")
-        button.pack(side=tk.TOP)  # zorgt ervoor dat alle knoppen onder elkaar staan
+                           command=lambda: self.grafiek(), height=2, width=12, state=DISABLED, overrelief=RIDGE)
+        self.buttonGrafiek.pack(side=tk.TOP)  # zorgt ervoor dat alle knoppen onder elkaar staan
+
         # Knop Voor sensor waardes
-        button = tk.Button(frame,
+        self.buttonSensor = tk.Button(frame,
                            text="Sensor Waardes",
                            fg="black", bg="white",
-                           command=lambda: self.grafiek(), height=2, width=12, overrelief=RIDGE, cursor="hand2")
-        button.pack(side=tk.TOP)  # zorgt ervoor dat alle knoppen onder elkaar staan
+                           command=lambda: self.grafiek(), height=2, width=12, overrelief=RIDGE, state=DISABLED)
+        self.buttonSensor.pack(side=tk.TOP)  # zorgt ervoor dat alle knoppen onder elkaar staan
+
         # Updating Label Huidige Maximale Roluitstand
         text = Label(frame, text="Dit is de Maximale Uitrolstand: ")
         text.pack(side=tk.TOP)
 
+        # Updating Label voor de maximale uitrolstand
         uitrolframe = tk.Frame(frame)
         uitrolframe.pack()
         self.var = StringVar()
@@ -270,13 +284,13 @@ class BedieningsEenheid(Frame):
         text = Label(uitrolframe, text=" cm")
         text.pack(side=tk.RIGHT)
 
+        # Invoer voor maximale uitrolstand
         text = Label(frame, text="Verander de Maximale Uitrolstand:")
         text.pack(side=tk.TOP)
-        # Invoer voor maximale uitrolstand
         invoer = Entry(frame)
         invoer.pack(side=tk.LEFT)
-        button = tk.Button(frame, text='Verstuur', command=lambda : self.InvoerWaarde(invoer.get(),self.eenheid), overrelief=RIDGE, cursor="hand2")
-        button.pack(side=tk.LEFT)
+        self.buttonMax = tk.Button(frame, text='Verstuur', command=lambda : self.InvoerWaarde(invoer.get(),self.eenheid), overrelief=RIDGE, state=DISABLED)
+        self.buttonMax.pack(side=tk.LEFT)
 
         frame.pack(side=tk.LEFT)  # zorgt ervoor dat alle frames naast elkaar komen
 
