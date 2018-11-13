@@ -44,7 +44,7 @@
     <session id="-1277731253">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="19" />
+          <entry key="project.closed" value="20" />
           <entry key="project.open.time.0" value="2" />
           <entry key="project.open.time.10" value="1" />
           <entry key="project.open.time.11" value="1" />
@@ -55,23 +55,23 @@
           <entry key="project.open.time.25" value="1" />
           <entry key="project.open.time.3" value="10" />
           <entry key="project.open.time.32" value="1" />
-          <entry key="project.open.time.4" value="2" />
+          <entry key="project.open.time.4" value="3" />
           <entry key="project.open.time.6" value="1" />
-          <entry key="project.opened" value="23" />
+          <entry key="project.opened" value="24" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
           <entry key="dummy" value="20" />
-          <entry key="py" value="22606" />
-          <entry key="txt" value="134" />
+          <entry key="py" value="24237" />
+          <entry key="txt" value="165" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="PLAIN_TEXT" value="154" />
-          <entry key="Python" value="20699" />
-          <entry key="Scratch" value="1907" />
+          <entry key="PLAIN_TEXT" value="185" />
+          <entry key="Python" value="22228" />
+          <entry key="Scratch" value="2009" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
@@ -92,14 +92,11 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/CentraleProject.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2550">
-              <caret line="220" column="31" lean-forward="true" selection-start-line="220" selection-start-column="31" selection-end-line="220" selection-end-column="31" />
+            <state relative-caret-position="357">
+              <caret line="149" column="56" lean-forward="true" selection-start-line="149" selection-start-column="56" selection-end-line="149" selection-end-column="56" />
               <folding>
                 <element signature="e#0#84#0" expanded="true" />
-                <marker date="1542104942574" expanded="true" signature="5350:5356" ph="..." />
-                <marker date="1542104942574" expanded="true" signature="8345:8594" ph="..." />
-                <marker date="1542104942574" expanded="true" signature="8589:8594" ph="..." />
-                <marker date="1542104942574" expanded="true" signature="13512:13513" ph="..." />
+                <marker date="1542144203408" expanded="true" signature="5605:5611" ph="..." />
               </folding>
             </state>
           </provider>
@@ -117,8 +114,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$APPLICATION_CONFIG_DIR$/scratches/scratch_5.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="459">
-              <caret line="27" column="7" selection-start-line="27" selection-start-column="7" selection-end-line="27" selection-end-column="7" />
+            <state relative-caret-position="68">
+              <caret line="23" column="9" selection-start-line="23" selection-start-column="9" selection-end-line="23" selection-end-column="9" />
             </state>
           </provider>
         </entry>
@@ -137,6 +134,10 @@
       <find>\n</find>
       <find>c</find>
       <find>GetSensorWaardes</find>
+      <find>SetGrafiekData</find>
+      <find>BestandNaam</find>
+      <find>SensorWaardes</find>
+      <find>animate</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -147,9 +148,9 @@
       <list>
         <option value="$PROJECT_DIR$/Test.py" />
         <option value="$APPLICATION_CONFIG_DIR$/scratches/d.py" />
-        <option value="$APPLICATION_CONFIG_DIR$/scratches/scratch_4.py" />
         <option value="$PROJECT_DIR$/scratch_6.py" />
         <option value="$APPLICATION_CONFIG_DIR$/scratches/scratch_6.py" />
+        <option value="$APPLICATION_CONFIG_DIR$/scratches/scratch_4.py" />
         <option value="$APPLICATION_CONFIG_DIR$/scratches/scratch_5.py" />
         <option value="$PROJECT_DIR$/CentraleProject.py" />
       </list>
@@ -362,9 +363,9 @@
       <list>
         <item itemvalue="Python.CentraleProject" />
         <item itemvalue="Python.scratch_5" />
+        <item itemvalue="Python.scratch_4" />
         <item itemvalue="Python.scratch_6 (1)" />
         <item itemvalue="Python.scratch_6" />
-        <item itemvalue="Python.scratch_4" />
       </list>
     </recent_temporary>
   </component>
@@ -421,7 +422,14 @@
       <option name="project" value="LOCAL" />
       <updated>1541940216969</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="V 0.4.1&#10;Updating UI verder uitgewerkt">
+      <created>1542106070297</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1542106070297</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TodoView">
@@ -435,20 +443,21 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.15806112" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.48366702" visible="true" weight="0.1928494" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.48314014" visible="true" weight="0.1928494" />
       <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.4926238" weight="0.3997833" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.32936078" />
       <window_info anchor="bottom" id="Version Control" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Terminal" order="8" weight="0.32936078" />
-      <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.516333" side_tool="true" visible="true" weight="0.1928494" />
+      <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.5168598" side_tool="true" visible="true" weight="0.1928494" />
       <window_info anchor="bottom" id="Python Console" order="10" weight="0.32936078" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -465,7 +474,8 @@
     <MESSAGE value="V 0.3.0.1" />
     <MESSAGE value="V 0.3.1.3&#10;Small Bugg Fixes" />
     <MESSAGE value="V 0.4.0&#10;Toevoegen van een updating gui, en het aanroepen van meerdere sensors" />
-    <option name="LAST_COMMIT_MESSAGE" value="V 0.4.0&#10;Toevoegen van een updating gui, en het aanroepen van meerdere sensors" />
+    <MESSAGE value="V 0.4.1&#10;Updating UI verder uitgewerkt" />
+    <option name="LAST_COMMIT_MESSAGE" value="V 0.4.1&#10;Updating UI verder uitgewerkt" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/venv/Lib/site-packages/serial/test.py">
@@ -522,12 +532,8 @@
     <entry file="file://$USER_HOME$/Downloads/opgave_1.py">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$APPLICATION_CONFIG_DIR$/scratches/scratch_5.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="459">
-          <caret line="27" column="7" selection-start-line="27" selection-start-column="7" selection-end-line="27" selection-end-column="7" />
-        </state>
-      </provider>
+    <entry file="file://$APPLICATION_CONFIG_DIR$/scratches/scratch_6.py">
+      <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="file://$APPLICATION_CONFIG_DIR$/scratches/scratch_4.py">
       <provider selected="true" editor-type-id="text-editor">
@@ -536,19 +542,20 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$APPLICATION_CONFIG_DIR$/scratches/scratch_6.py">
-      <provider selected="true" editor-type-id="text-editor" />
+    <entry file="file://$APPLICATION_CONFIG_DIR$/scratches/scratch_5.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="68">
+          <caret line="23" column="9" selection-start-line="23" selection-start-column="9" selection-end-line="23" selection-end-column="9" />
+        </state>
+      </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/CentraleProject.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2550">
-          <caret line="220" column="31" lean-forward="true" selection-start-line="220" selection-start-column="31" selection-end-line="220" selection-end-column="31" />
+        <state relative-caret-position="357">
+          <caret line="149" column="56" lean-forward="true" selection-start-line="149" selection-start-column="56" selection-end-line="149" selection-end-column="56" />
           <folding>
             <element signature="e#0#84#0" expanded="true" />
-            <marker date="1542104942574" expanded="true" signature="5350:5356" ph="..." />
-            <marker date="1542104942574" expanded="true" signature="8345:8594" ph="..." />
-            <marker date="1542104942574" expanded="true" signature="8589:8594" ph="..." />
-            <marker date="1542104942574" expanded="true" signature="13512:13513" ph="..." />
+            <marker date="1542144203408" expanded="true" signature="5605:5611" ph="..." />
           </folding>
         </state>
       </provider>

@@ -36,11 +36,12 @@ def GetData(sensor,poort):
     ComPort.parity = 'N'  # No parity
     ComPort.stopbits = 1  # Number of Stop bits = 1
     # Schrijft data naar de poort
-    sensor = str(sensor)
     #print("Data wordt verzonden...")
+    sensor = sensor.encode("utf-8")
     time.sleep(1.58)
-    ComPort.write(sensor.encode())
+    ComPort.write(sensor)
     # Leest de data van de poort
+    time.sleep(0.1)
     out = ""
     i = 0
     while i < 1:
@@ -48,7 +49,6 @@ def GetData(sensor,poort):
             out += ComPort.read(1).decode(errors='ignore')
             i = i + 1
     print("Dit is de output data: " + out)
-
     ComPort.close()  # Close the C/OM Port
     return(out)
 
@@ -60,13 +60,13 @@ def SetGrafiekData(sensor,poort):
     #print("Grafiek Data wordt opgehaald")
     lines = []
     data = GetData(sensor,poort)
-    BestandNaam = "Besturingseenheid" + str(poort) + "Grafiek.txt"
+    BestandNaam = "Besturingseenheid" + str(poort) + "Sensor" + str(sensor) + "Grafiek.txt"
     if(os.path.isfile(BestandNaam)):
         file = open(BestandNaam, 'r').read()
         file.rstrip("\n")
         lines = file.split(':')
         x = lines.__len__()
-        print(AantalRuns)
+    # Zorgt ervoor dat de files gecleared worden zodra het programma opnieuw opgestart wordt
         if(AantalRuns == 0):
             file = open(BestandNaam, "w+")
             AantalRuns = AantalRuns + 1
@@ -91,7 +91,7 @@ class BedieningsEenheid(Frame):
         self.frame = frame
         self.eenheid = i + 1
         self.poort = " "
-        self.MaxUitrol = 35
+        self.MaxUitrol = 160 # Dit is de standaart waarde die in onze C code is ingesteld.
         self.ComPort = ''
         self.fig = plt.figure()
         self.ax1 = self.fig.add_subplot(1, 1, 1)
@@ -102,7 +102,7 @@ class BedieningsEenheid(Frame):
 
     # Tekent een grafiek //Autheur: sentdex op Youtube
     def animate(self, i):
-        BestandNaam = "Besturingseenheid" + str(self.poort) + "Grafiek.txt"
+        BestandNaam = "Besturingseenheid" + str(self.poort) + "Sensor" + str(self.sensor) + "Grafiek.txt"
         if (os.path.isfile(BestandNaam)):
             file = open(BestandNaam, 'r').read()
             lines = file.split(':')
@@ -117,10 +117,10 @@ class BedieningsEenheid(Frame):
             self.ax1.plot(xs, ys)
         else: f= open(BestandNaam,"w+")
 
-    # Vraaft de temperatuur op //Autheur Ries Bezemer
+    # Vraagt de temperatuur op //Autheur Ries Bezemer
     def getTempLabelData(self):
-        sensor = 5
-        BestandNaam = "Besturingseenheid" + str(self.poort) + "Grafiek.txt"
+        sensor = "T"
+        BestandNaam = "Besturingseenheid" + str(self.poort) + "Sensor" + str(sensor) + "Grafiek.txt"
         file = open(BestandNaam, 'r').read()
         file.rstrip("\n")
         lines = file.split(':')
@@ -131,8 +131,8 @@ class BedieningsEenheid(Frame):
 
     # Vraagt de lichtintensiteit op //Autheur Ries Bezemer
     def getLichtLabelData(self):
-        sensor = 6
-        BestandNaam = "Besturingseenheid" + str(self.poort) + "Grafiek.txt"
+        sensor = "L"
+        BestandNaam = "Besturingseenheid" + str(self.poort) +"Sensor"+str(sensor)+"Grafiek.txt"
         file = open(BestandNaam, 'r').read()
         file.rstrip("\n")
         lines = file.split(':')
@@ -145,15 +145,18 @@ class BedieningsEenheid(Frame):
     def omhoog(self):
         print("Besturingseenheid " + str(self.eenheid) + " wordt omhoog gedaan")
         print("Een moment geduld alstublieft...")
+        SetGrafiekData("H", self.poort)
 
     # Doet het zonnescherm omlaag //Autheur Ries Bezemer
     def omlaag(self):
         print("Besturingseenheid " + str(self.eenheid) + " wordt omlaag gedaan")
         print("Een moment geduld alstublieft...")
+        SetGrafiekData("L", self.poort)
 
     # Drukt een grafiek af //Autheur Ries Bezemer
-    def grafiek(self):
-        print("De grafiek voor besturingseenheid " + str(self.eenheid) + " wordt getekend")
+    def grafiek(self,sensor):
+        print("De grafiek voor besturingseenheid " + str(self.eenheid) +"Grafiek"+str(sensor)+" wordt getekend")
+        self.sensor = sensor
         ani = animation.FuncAnimation(self.fig, self.animate, interval=1000)
         plt.show()
 
@@ -176,10 +179,12 @@ class BedieningsEenheid(Frame):
                 print("De COMport van bedieningseenheid " + str(self.eenheid) + " is op " + str(self.poort) + " gezet")
                 ToegewezenPorts[waarde] = self.eenheid
                 Thread(target=self.SensorWaardes).start()  # Zet het genereren van waardes op een andere thread, zodat het programma soepeler loopt.
-                self.buttonGrafiek.configure(state=NORMAL, cursor="hand2")
+                # Activeert alle knoppen en updating labels van UI zodra er een comport is geselecteerd
+                self.buttonAfstand.configure(state=NORMAL, cursor="hand2")
                 self.buttonOmlaag.configure(state=NORMAL, cursor="hand2")
                 self.buttonOmhoog.configure(state=NORMAL, cursor="hand2")
-                self.buttonSensor.configure(state=NORMAL, cursor="hand2")
+                self.buttonlicht.configure(state=NORMAL, cursor="hand2")
+                self.buttonTemp.configure(state=NORMAL, cursor="hand2")
                 self.buttonMax.configure(state=NORMAL, cursor="hand2")
                 self.tempvar.set(self.tempvar)
                 self.lichtvar.set(self.lichtvar)
@@ -194,13 +199,20 @@ class BedieningsEenheid(Frame):
 
     # Vraagt de waardes van de sensor op //Autheur Ries Bezemer
     def SensorWaardes(self):
+        global AantalRuns
+        e = 0
         i = 1
         while (i > 0):
-            SetGrafiekData(4,self.poort)# Roept de waardes van de afstand sensor op
-            sleep(2)
+            SetGrafiekData("A", self.poort)
+            AantalRuns = e
+            SetGrafiekData("L", self.poort)
+            AantalRuns = e
+            SetGrafiekData("T", self.poort)
             self.getLichtLabelData()
             self.getTempLabelData()
             self.frame.update_idletasks()
+            e = 1
+            sleep(2)
 
     # Drukt de knoppen van de bedieningseenheid af //Autheur Ries Bezemer
     def BedPaneel(self):
@@ -255,19 +267,27 @@ class BedieningsEenheid(Frame):
                            command=lambda: self.omlaag(), height=2, width=12, overrelief=RIDGE, state=DISABLED)
         self.buttonOmlaag.pack(side=tk.TOP)
 
-        # Knop voor grafiek
-        self.buttonGrafiek = tk.Button(frame,
-                           text="Grafiek",
+        # Knop voor afstand Grafiek
+        self.buttonAfstand = tk.Button(frame,
+                           text="Grafiek Afstand",
                            fg="black", bg="white",
-                           command=lambda: self.grafiek(), height=2, width=12, state=DISABLED, overrelief=RIDGE)
-        self.buttonGrafiek.pack(side=tk.TOP)  # zorgt ervoor dat alle knoppen onder elkaar staan
+                           command=lambda: self.grafiek("A"), height=2, width=12, state=DISABLED, overrelief=RIDGE)
+        self.buttonAfstand.pack(side=tk.TOP)
 
-        # Knop Voor sensor waardes
-        self.buttonSensor = tk.Button(frame,
-                           text="Sensor Waardes",
+        # Knop Voor temperatuur Grafiek
+        self.buttonTemp = tk.Button(frame,
+                           text="Grafiek Temp.",
                            fg="black", bg="white",
-                           command=lambda: self.grafiek(), height=2, width=12, overrelief=RIDGE, state=DISABLED)
-        self.buttonSensor.pack(side=tk.TOP)  # zorgt ervoor dat alle knoppen onder elkaar staan
+                           command=lambda: self.grafiek("T"), height=2, width=12, overrelief=RIDGE, state=DISABLED)
+        self.buttonTemp.pack(side=tk.TOP)  #
+
+        # Knop voor lichtintensieteit Grafiek
+        self.buttonlicht = tk.Button(frame,
+                            text="Grafiek Licht.",
+                            fg="black", bg="white",
+                            command=lambda: self.grafiek("L"), height=2, width=12, overrelief=RIDGE,
+                            state=DISABLED)
+        self.buttonlicht.pack(side=tk.TOP)  # zorgt ervoor dat alle knoppen onder elkaar staan
 
         # Updating Label Huidige Maximale Roluitstand
         text = Label(frame, text="Dit is de Maximale Uitrolstand: ")
@@ -315,15 +335,5 @@ def Startup():
         Fout.withdraw()
         messagebox.showerror("Let Op!", "U heeft geen bedieningseenheid aangesloten\nSluit een bordje aan en probeer het opnieuw!")
 
-
 print("Een moment geduld het programma wordt opgestart...")
-Thread(target = Startup).start()
-
-
-
-
-#------------------------------------------------------------Tekst //Autheur Ries Bezemer -------------------------------------------------
-#Tekst = "Project Leden:\nKarel Koster\nMatteo Geertsema\nMark de Vries\nRies Bezemer"
-#msg = tk.Message(root, text = Tekst)
-#msg.config(bg='White', font=('Arial', 14))
-#msg.pack()
+Startup()
