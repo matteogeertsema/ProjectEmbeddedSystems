@@ -49,7 +49,7 @@ def GetData(sensor,poort):
             out += ComPort.read(1).decode(errors='ignore')
             i = i + 1
     print("Dit is de output data: " + out)
-    ComPort.close()  # Close the C/OM Port
+    ComPort.close()  # Close the COM Port
     return(out)
 
 
@@ -98,6 +98,7 @@ class BedieningsEenheid(Frame):
         self.var = " "
         self.lichtvar = 0
         self.tempvar = 0
+        self.run = True
         self.BedPaneel()
 
     # Tekent een grafiek //Autheur: sentdex op Youtube
@@ -145,16 +146,23 @@ class BedieningsEenheid(Frame):
     def omhoog(self):
         print("Besturingseenheid " + str(self.eenheid) + " wordt omhoog gedaan")
         print("Een moment geduld alstublieft...")
-        SetGrafiekData("H", self.poort)
+        self.run = False
+        sleep(1.8) #Wacht op de andere functie, totdat die klaar is met lezen / schrijven
+        GetData("H", self.poort)
+        print("De eenheid gaat omhoog")
 
     # Doet het zonnescherm omlaag //Autheur Ries Bezemer
     def omlaag(self):
         print("Besturingseenheid " + str(self.eenheid) + " wordt omlaag gedaan")
         print("Een moment geduld alstublieft...")
-        SetGrafiekData("L", self.poort)
+        self.run = False
+        sleep(1.8) #Wacht op de andere functie, totdat die klaar is met lezen / schrijven
+        GetData("L", self.poort)
+        print("De eenheid gaat omlaag")
 
     # Drukt een grafiek af //Autheur Ries Bezemer
     def grafiek(self,sensor):
+        #plt.show(block=True)
         print("De grafiek voor besturingseenheid " + str(self.eenheid) +"Grafiek"+str(sensor)+" wordt getekend")
         self.sensor = sensor
         ani = animation.FuncAnimation(self.fig, self.animate, interval=1000)
@@ -203,11 +211,23 @@ class BedieningsEenheid(Frame):
         e = 0
         i = 1
         while (i > 0):
+            if (self.run == False):
+                sleep(4)
+                self.run = True
             SetGrafiekData("A", self.poort)
+
+            if(self.run == False):
+                sleep(4)
+                self.run = True
             AantalRuns = e
             SetGrafiekData("L", self.poort)
+
+            if (self.run == False):
+                sleep(4)
+                self.run = True
             AantalRuns = e
             SetGrafiekData("T", self.poort)
+
             self.getLichtLabelData()
             self.getTempLabelData()
             self.frame.update_idletasks()
