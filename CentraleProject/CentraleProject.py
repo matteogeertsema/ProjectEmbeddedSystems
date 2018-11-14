@@ -98,6 +98,7 @@ class BedieningsEenheid(Frame):
         self.var = " "
         self.lichtvar = 0
         self.tempvar = 0
+        self.afstandvar = 0
         self.run = True
         self.BedPaneel()
 
@@ -117,6 +118,18 @@ class BedieningsEenheid(Frame):
             self.ax1.clear()
             self.ax1.plot(xs, ys)
         else: f= open(BestandNaam,"w+")
+
+    # Vraaft de data van de afstandsensor op //Autheur Ries Bezemer
+    def getAfstandData(self):
+        sensor = "A"
+        BestandNaam = "Besturingseenheid" + str(self.poort) + "Sensor" + str(sensor) + "Grafiek.txt"
+        file = open(BestandNaam, 'r').read()
+        file.rstrip("\n")
+        lines = file.split(':')
+        x = lines.__len__() - 2
+        line = lines[x]
+        x, y = line.split(',')
+        self.afstandvar.set(y)
 
     # Vraagt de temperatuur op //Autheur Ries Bezemer
     def getTempLabelData(self):
@@ -188,21 +201,24 @@ class BedieningsEenheid(Frame):
                 ToegewezenPorts[waarde] = self.eenheid
                 Thread(target=self.SensorWaardes).start()  # Zet het genereren van waardes op een andere thread, zodat het programma soepeler loopt.
                 # Activeert alle knoppen en updating labels van UI zodra er een comport is geselecteerd
-                self.buttonAfstand.configure(state=NORMAL, cursor="hand2")
                 self.buttonOmlaag.configure(state=NORMAL, cursor="hand2")
                 self.buttonOmhoog.configure(state=NORMAL, cursor="hand2")
                 self.buttonlicht.configure(state=NORMAL, cursor="hand2")
                 self.buttonTemp.configure(state=NORMAL, cursor="hand2")
                 self.buttonMax.configure(state=NORMAL, cursor="hand2")
-                self.tempvar.set(self.tempvar)
                 self.lichtvar.set(self.lichtvar)
+                self.tempvar.set(self.tempvar)
+                self.afstandvar.set(self.afstandvar)
 
 
     # Stelt de maximale uitrolstand in //Autheur Ries Bezemer
     def InvoerWaarde(self,waarde,eenheid):
+        sensor = "m"
         self.MaxUitrol = waarde
         print("De maximale uitrolwaarde voor bedieningseenheid "+str(eenheid)+" is: "+str(waarde))
         self.var.set(self.MaxUitrol)
+        data = sensor+str(waarde)
+        GetData(data,self.poort) #stuurt m + de afstand die ingesteld moet worden.
         self.frame.update_idletasks()
 
     # Vraagt de waardes van de sensor op //Autheur Ries Bezemer
@@ -230,6 +246,7 @@ class BedieningsEenheid(Frame):
 
             self.getLichtLabelData()
             self.getTempLabelData()
+            self.getAfstandData()
             self.frame.update_idletasks()
             e = 1
             sleep(2)
@@ -266,6 +283,17 @@ class BedieningsEenheid(Frame):
         temp = Label(lichtframe, textvariable=self.lichtvar)
         temp.pack(side=RIGHT)
 
+        # Updating Label voor de afstandsensor
+        self.afstandvar = StringVar()
+        self.afstandvar.set(self.afstandvar)
+        afstandframe = tk.Frame(frame)
+        afstandframe.pack(side=TOP)
+        text = Label(afstandframe, text="Stand Zonnescherm: ")
+        text.pack(side=LEFT)
+        self.afstandvar.set('N/A')
+        tempLabel = Label(afstandframe, textvariable=self.afstandvar)
+        tempLabel.pack(side=RIGHT)
+
         # Selecteer COM port
         variable = StringVar(self.frame)
         variable.set("Selecteer een poort")
@@ -286,13 +314,6 @@ class BedieningsEenheid(Frame):
                            fg="black", bg="white",
                            command=lambda: self.omlaag(), height=2, width=12, overrelief=RIDGE, state=DISABLED)
         self.buttonOmlaag.pack(side=tk.TOP)
-
-        # Knop voor afstand Grafiek
-        self.buttonAfstand = tk.Button(frame,
-                           text="Grafiek Afstand",
-                           fg="black", bg="white",
-                           command=lambda: self.grafiek("A"), height=2, width=12, state=DISABLED, overrelief=RIDGE)
-        self.buttonAfstand.pack(side=tk.TOP)
 
         # Knop Voor temperatuur Grafiek
         self.buttonTemp = tk.Button(frame,
