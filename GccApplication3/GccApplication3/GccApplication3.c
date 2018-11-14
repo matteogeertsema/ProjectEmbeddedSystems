@@ -49,26 +49,53 @@ void transmit(uint8_t data)
 }
 
 void initADC(){
-	// Internal 2.56V voltage reference
-	// set ADC0 as the ADC input channel
+	// zet ADC0 als de ADC input channel
 	ADMUX |=(1<<REFS0)|(1<<REFS1)|(1<<ADLAR);
 
-	// enable ADC
-	// set prescaler to 128
+	// schakel ADC in
+	// zet prescaler naar 128
 	ADCSRA |=(1<<ADEN)|(1<<ADATE)|(1<<ADPS0)|(1<<ADPS1)|(1<<ADPS2);
 	ADCSRA |=(1<<ADSC);
 }
 
-void temp(){
-	ADCRes = (ADCH*(1100.0/256)-500)/10; //Calculate temperature in degrees C from ADC output
-	 snprintf(ADCOut, 5, "#f", ADCRes); //Transform ADCRes floating point to string called ADCOut
+double temp(){
+	
+	int duur;
+	//float arr[40];
+	double total = 0;
+	
+	for(duur = 0; duur < 40; duur++){
+		ADCRes = (ADCH*(1100.0/256)-500)/10; //Bereken temperatuur in Celsius van de ADC output
+		total += ADCRes; //Geef temperatuur aan total
+		_delay_ms(1000);
+	}	
+	//size_t NumberOfElements = sizeof(arr)/sizeof(arr[0]);	
+	//a[i] = 	ADCRes;
+	//total += a[i];
+	
 	 
-	 dtostrf(ADCRes, 2, 2, ADCOut);// tijdelijk_float naar string 
-	 
-	 UART_Putstring(ADCOut);
-	 transmit('\r'); transmit('\n');
-	 
-	 _delay_ms(1000);
+	return total;
+}
+
+/*int gemiddeld(temperatuur) {
+   float total;
+   float a[] = {temperatuur};
+   int duur = 40;
+   int i;
+
+   total = 0;
+   
+   for(i = 0; i < duur; i++) {
+      total += a[i];
+   }
+   return total;
+}*/
+
+void temp_show(){
+	float avg = temp() / 40;
+	dtostrf(avg, 2, 2, ADCOut);// float naar string
+	UART_Putstring(ADCOut);
+	transmit('\r'); transmit('\n');
 }
 
 int main(void)
@@ -77,7 +104,7 @@ int main(void)
 	initADC();
 	
 	SCH_Init_T1(); // init de timer en verwijder alle taken
-	SCH_Add_Task(temp,0,50);
+	SCH_Add_Task(temp_show,0,1);
 	SCH_Start(); // start de scheduler
 	
     while(1)
