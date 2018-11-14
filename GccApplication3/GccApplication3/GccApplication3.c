@@ -58,48 +58,75 @@ void initADC(){
 	ADCSRA |=(1<<ADSC);
 }
 
-double temp(){
+void led_groen()
+{
+	DDRB = 0xff;
+	PORTB = 0b00000001;	
+}
+
+void uitrollen()
+{
+	DDRB = 0xff;
+	PORTB = 0b00000110;
+	_delay_ms(1000);
+	PORTB = 0b00000100;
+	_delay_ms(1000);
+}
+
+void inrollen()
+{
+	DDRB = 0xff;
+	PORTB = 0b00000011;
+	_delay_ms(1000);
+	PORTB = 0b00000001;
+	_delay_ms(1000);
+}
+
+void led_rood()
+{
+	DDRB = 0xff;
+	PORTB = 0b00000100;	
+}
+
+double temp_gem(){
 	
 	int duur;
-	//float arr[40];
 	double total = 0;
 	
 	for(duur = 0; duur < 40; duur++){
 		ADCRes = (ADCH*(1100.0/256)-500)/10; //Bereken temperatuur in Celsius van de ADC output
 		total += ADCRes; //Geef temperatuur aan total
-		_delay_ms(1000);
+		_delay_ms(1000); //1 sec delay * 40 = 40 sec delay
 	}	
-	//size_t NumberOfElements = sizeof(arr)/sizeof(arr[0]);	
-	//a[i] = 	ADCRes;
-	//total += a[i];
+	double avg = total / 40; //bereken gemiddelde
 	
-	 
-	return total;
+	return avg;
 }
-
-/*int gemiddeld(temperatuur) {
-   float total;
-   float a[] = {temperatuur};
-   int duur = 40;
-   int i;
-
-   total = 0;
-   
-   for(i = 0; i < duur; i++) {
-      total += a[i];
-   }
-   return total;
-}*/
 
 void temp_show(){
-	float avg = temp() / 40;
-	dtostrf(avg, 2, 2, ADCOut);// float naar string
+	double avg_temp = temp_gem();//gemiddelde temperatuur aan avg_temp geven
+	int overgang_temp = 23;//temperatuur waarbij de rolluik omhoog of omlaag moet
+	
+	
+	if(avg_temp < overgang_temp){  
+		for(int i = 0; i < 2; i++){
+			
+		}
+		led_groen();
+	}
+	else if(avg_temp >= overgang_temp){
+		led_rood();
+	}
+	
+	dtostrf(avg_temp, 2, 2, ADCOut);// float naar string
+	_delay_ms(20000);//20 sec delay zodat de centrale om de 60 sec de gemiddelde temperatuur krijgt
 	UART_Putstring(ADCOut);
-	transmit('\r'); transmit('\n');
 }
+
 
 int main(void)
 {
+	led_groen(); // rolluik is eerst opgerold
 	uart_init();
 	initADC();
 	
