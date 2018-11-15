@@ -44,7 +44,7 @@
     <session id="-1277731253">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="20" />
+          <entry key="project.closed" value="21" />
           <entry key="project.open.time.0" value="2" />
           <entry key="project.open.time.10" value="1" />
           <entry key="project.open.time.11" value="1" />
@@ -56,22 +56,22 @@
           <entry key="project.open.time.25" value="1" />
           <entry key="project.open.time.3" value="10" />
           <entry key="project.open.time.32" value="1" />
-          <entry key="project.open.time.4" value="3" />
+          <entry key="project.open.time.4" value="4" />
           <entry key="project.open.time.6" value="1" />
-          <entry key="project.opened" value="25" />
+          <entry key="project.opened" value="26" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
           <entry key="dummy" value="20" />
-          <entry key="py" value="25299" />
-          <entry key="txt" value="216" />
+          <entry key="py" value="25379" />
+          <entry key="txt" value="218" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="PLAIN_TEXT" value="236" />
-          <entry key="Python" value="23290" />
+          <entry key="PLAIN_TEXT" value="238" />
+          <entry key="Python" value="23370" />
           <entry key="Scratch" value="2009" />
         </counts>
       </usages-collector>
@@ -93,13 +93,14 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/CentraleProject.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="162">
-              <caret line="254" column="24" lean-forward="true" selection-start-line="254" selection-start-column="24" selection-end-line="254" selection-end-column="24" />
+            <state relative-caret-position="289">
+              <caret line="17" lean-forward="true" selection-start-line="17" selection-end-line="17" />
               <folding>
                 <element signature="e#0#84#0" expanded="true" />
-                <marker date="1542221921630" expanded="true" signature="4901:5250" ph="..." />
-                <marker date="1542221921630" expanded="true" signature="6098:6104" ph="..." />
-                <marker date="1542221921630" expanded="true" signature="10566:10571" ph="..." />
+                <marker date="1542277670203" expanded="true" signature="3486:3503" ph="..." />
+                <marker date="1542277670203" expanded="true" signature="4929:5278" ph="..." />
+                <marker date="1542277670203" expanded="true" signature="6126:6132" ph="..." />
+                <marker date="1542277670203" expanded="true" signature="10590:10595" ph="..." />
               </folding>
             </state>
           </provider>
@@ -170,6 +171,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -224,7 +226,6 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -446,7 +447,14 @@
       <option name="project" value="LOCAL" />
       <updated>1542188285379</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="V 0.5.1&#10;Small bugg fixing and improvements">
+      <created>1542232144233</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1542232144233</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="TodoView">
@@ -467,14 +475,14 @@
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.48261327" visible="true" weight="0.5135428" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.48208642" visible="true" weight="0.16143012" />
       <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.4926238" weight="0.3997833" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.32936078" />
       <window_info anchor="bottom" id="Version Control" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Terminal" order="8" weight="0.32936078" />
-      <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.51738673" side_tool="true" visible="true" weight="0.5135428" />
+      <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.5179136" side_tool="true" visible="true" weight="0.16143012" />
       <window_info anchor="bottom" id="Python Console" order="10" weight="0.32936078" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -494,7 +502,8 @@
     <MESSAGE value="V 0.4.1&#10;Updating UI verder uitgewerkt" />
     <MESSAGE value="V 0.4.2&#10;Bugg Fixing" />
     <MESSAGE value="V 0.5&#10;Small bugg fixing and improvements" />
-    <option name="LAST_COMMIT_MESSAGE" value="V 0.5&#10;Small bugg fixing and improvements" />
+    <MESSAGE value="V 0.5.1&#10;Small bugg fixing and improvements" />
+    <option name="LAST_COMMIT_MESSAGE" value="V 0.5.1&#10;Small bugg fixing and improvements" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/venv/Lib/site-packages/serial/test.py">
@@ -556,13 +565,14 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/CentraleProject.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="162">
-          <caret line="254" column="24" lean-forward="true" selection-start-line="254" selection-start-column="24" selection-end-line="254" selection-end-column="24" />
+        <state relative-caret-position="289">
+          <caret line="17" lean-forward="true" selection-start-line="17" selection-end-line="17" />
           <folding>
             <element signature="e#0#84#0" expanded="true" />
-            <marker date="1542221921630" expanded="true" signature="4901:5250" ph="..." />
-            <marker date="1542221921630" expanded="true" signature="6098:6104" ph="..." />
-            <marker date="1542221921630" expanded="true" signature="10566:10571" ph="..." />
+            <marker date="1542277670203" expanded="true" signature="3486:3503" ph="..." />
+            <marker date="1542277670203" expanded="true" signature="4929:5278" ph="..." />
+            <marker date="1542277670203" expanded="true" signature="6126:6132" ph="..." />
+            <marker date="1542277670203" expanded="true" signature="10590:10595" ph="..." />
           </folding>
         </state>
       </provider>

@@ -84,6 +84,9 @@ def SetGrafiekData(sensor,poort):
     else:
         AantalCrash = AantalCrash + 1
         print(str(AantalCrash)+" Crashes opgevangen")
+def show():
+    plt.show()
+
 # -----------------------------------------------Classes-------------------------------------------------------------------------
 class BedieningsEenheid(Frame):
     # De constructor van de classe //Autheur Ries Bezemer
@@ -179,7 +182,7 @@ class BedieningsEenheid(Frame):
         print("De grafiek voor besturingseenheid " + str(self.eenheid) +"Grafiek"+str(sensor)+" wordt getekend")
         self.sensor = sensor
         ani = animation.FuncAnimation(self.fig, self.animate, interval=1000)
-        plt.show()
+        show()
 
     # Stelt de poort van de bedieningseenheid in //Autheur Ries Bezemer
     def SetPoort(self,waarde):
